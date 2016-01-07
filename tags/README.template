@@ -1,0 +1,26 @@
+# {{TagName}}
+
+TODO: Fill this in.
+
+## Usage
+
+```html
+<html>
+  <head>
+  <!-- <link rel="import" href="../../{{TagName}}.html"/> -->
+  <!-- <script src="../../dist/{{TagName}}.min.js"></script> -->
+  <!-- <script src="../../tags/{{TagName}}/tag.js"></script> -->
+  <script src="//cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+  <script src="//cdn.jsdelivr.net/ngn-components/latest/{{TagName}}.min.js"></script>
+  </head>
+  <body>
+    <{{TagName}}></{{TagName}}>
+  </body>
+</html>
+```
+
+## Example
+
+```html
+<{{TagName}}></{{TagName}}>
+```

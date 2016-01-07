@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+  <!-- <link rel="import" href="../../ngn-cycle.html"/> -->
+  <!-- <script src="../../dist/ngn-cycle.min.js"></script> -->
+  <script src="../../tags/ngn-cycle/tag.js"></script>
+</head>
+
+<body>
+  <ngn-cycle restart="true">
+    <section class="active">
+      Screen 1
+    </section>
+    <section>
+      Screen 2
+    </section>
+    <section>
+      Screen 3
+    </section>
+  </ngn-cycle>
+  <script type="text/javascript">
+    document.querySelector('ngn-cycle').addEventListener('change', function (e) {
+      console.log(e.detail)
+    })
+  </script>
+</body>
+
+</html>
