@@ -20,6 +20,8 @@
   "license": "MIT",
   "ignore": [
     "**/*",
-    "!dist/*"
+    "!dist/*",
+    "dist/*.js",
+    "!dist/*.min.js"
   ]
 }

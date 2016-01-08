@@ -29,6 +29,7 @@ across modern browsers (IE 11+) looks like:
   <meta name="viewport" content="width=device-width">
   <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
   <script src="//cdn.jsdelivr.net/ngn-components/latest/ngn-cycle.min.js"></script>
+  <!-- <link rel="import" href="//cdn.jsdelivr.net/ngn-components/latest/ngn-cycle.min.js"/> -->
 </head>
 
 <body>
@@ -77,6 +78,7 @@ In your HTML:
   <head>
     <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
     <script src="bower_components/chassis-components/dist/<tag>.min.js"></script>
+    <!-- <link rel="import" href="bower_components/chassis-components/dist/<tag>.html"/> -->
   </head>
   <body>
     ...
@@ -98,7 +100,8 @@ npm install ngn-chassis-components
 <html>
   <head>
     <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-    <script src="node_modules/chassis-components/dist/<tag>.min.js"></script>
+    <script src="node_modules/ngn-chassis-components/dist/<tag>.min.js"></script>
+    <!-- <link rel="import" href="node_modules/ngn-chassis-components/dist/<tag>.html"/> -->
   </head>
   <body>
     ...
