@@ -5,6 +5,9 @@ sudo: false
 before_script:
 - npm install -g gulp
 before_deploy: gulp build
+branches:
+  except:
+   - master
 deploy:
 - provider: releases
   file:

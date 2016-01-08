@@ -1,10 +1,10 @@
 {
   "name": "ngn-webcomponents",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "NGN Web Components",
   "main": "index.js",
   "scripts": {
-    "test": "gulp build && karma start karma.conf.js",
+    "test": "echo No tests. Build process only.",
     "create": "gulp create",
     "build": "gulp build"
   },
