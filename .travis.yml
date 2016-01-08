@@ -12,8 +12,7 @@ deploy:
   provider: releases
   api_key:
     secure: 05O2+fbQH6hLjOGnU8jqEF+WoBJ8oGqbCo1Ih0eVxwuVVfQugzQPntzxHlK3d/2P+qlA9Wnd68nxdXwYDqlos/8cDzhTXVJ6c5G6d1tfgjzoQxUYSA0AV/oZ6HxTU81+knwzwlBAB6/xbD8xA9Cpnoy+gcW3DoNuqUXE3IqgsrpBFqximCDzCuQ4xQ8ZMB69DuS3XKZcjgYZMfbPCQ/aw9hLJoFCFBa1k3JnJ7sj4M4dJeVcOcshTvU4FRKn0O15+8rEdzXMgub2BQ9Wh0v5Xr8KwwuKtBF9o3Lt3FKAxFbZrjZL7CPrZcvOuVbFQRAewetnzcDveZiwaDBCoNOCsr5Uq8vvIHc6PkA0z7EUAFH4mgbqLP8kONbRqbL8Xam2djmMBa/cAW/7jfrzqAUCWqWKV4vMfdNnPCSSM//sb+opJ2OlJDsRROxeZHHEjRyvoNie+04sG15LX2531IHPAdlFuKiaUt0CfiDEE5SDAIzCzoBJUpB2koxFnm8YR7ykHaMpQwDYjGE6KOD2SBg/OHzvcIbv98C9Vhkh3TKJAZset3sA+MpsVIicM5y/V5juBI/Lfqp4vBuVcaH+JHDIg8czVxSKPWUHjuv7qoFup9S4nUcc7trRmzdaEa7ksMVCIdlVP7Wu+DscJ7P2UnvWiv9YsM3z53xWQaw+H0hQ4xA=
-  file_glob: true
-  files:
+  file:
     - dist/*.min.js
     - dist/*.html
   skip_cleanup: true
