@@ -88,7 +88,6 @@ gulp.task('copy', function () {
         + '\t\tshadow.appendChild(document.importNode(el, true))\n'
         + '\t})\n'
         + '\tdelete ph\n}\n'
-        console.log(tpl)
     }
     if (tpl) {
       str = str.replace(str.substr(initTplRange[0], initTplRange[1] - initTplRange[0]), tpl)
