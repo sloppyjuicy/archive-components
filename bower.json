@@ -1,0 +1,25 @@
+{
+  "name": "chassis-components",
+  "version": "0.0.1",
+  "homepage": "http://ngn.js.org",
+  "authors": [
+    "Corey Butler <corey@coreybutler.com>",
+    "Graham Butler <graham@grahambutler.com>"
+  ],
+  "description": "NGN Chassis Web Components library.",
+  "main": "dist/ngn-cycle.min.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "chassis",
+    "ngn",
+    "web",
+    "components"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/*",
+    "!dist/*"
+  ]
+}

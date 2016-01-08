@@ -62,6 +62,50 @@ helpful, or use `preconnect` directly in the `<head>` of your HTML page. For
 more information about preconnect, see
 [Ilya Grigorik's Preconnect article](https://www.igvita.com/2015/08/17/eliminating-roundtrips-with-preconnect/).
 
+### Bower
+
+If you use bower to manage UI dependencies, you can install & use it as follows:
+
+```sh
+bower install chassis-components
+```
+
+In your HTML:
+
+```html
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <script src="bower_components/chassis-components/dist/<tag>.min.js"></script>
+  </head>
+  <body>
+    ...
+  </body>
+</html>
+```
+
+### npm
+
+The npm installation is designed for projects in a node-like environment, such
+as [electron](http://electron.atom.io) or [NW.js](http://nwjs.io). Usage is
+straightforward:
+
+```sh
+npm install chassis-components
+```
+
+```html
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <script src="node_modules/chassis-components/dist/<tag>.min.js"></script>
+  </head>
+  <body>
+    ...
+  </body>
+</html>
+``` 
+
 # Creating New Components (Hacking)
 
 If you want to create a new NGN web component, you should first post an issue
@@ -91,7 +135,7 @@ wrapper for use with [HTML Imports](http://w3c.github.io/webcomponents/spec/impo
 We use this process to automatically generate production-ready components and
 upload them to the CDN through our automated release process.
 
-**PAY ATTENTION TO initTpl**
+### PAY ATTENTION TO initTpl
 
 The wizard will generate a `tag.js` file. Within this file, you'll notice a
 method/attribute called `initTpl`. This is a standard method that constructs
