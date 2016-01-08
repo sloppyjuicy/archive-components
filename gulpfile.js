@@ -26,12 +26,12 @@ gulp.task('version', function (next) {
   console.log('Checking versions.')
 
   // Sync Bower
-  // var bower = require('./bower.json')
-  // if (bower.version !== pkg.version) {
-  //   console.log('Updating bower package.')
-  //   bower.version = pkg.version
-  //   fs.writeFileSync(path.resolve('./bower.json'), JSON.stringify(bower, null, 2))
-  // }
+  var bower = require('./bower.json')
+  if (bower.version !== pkg.version) {
+    console.log('Updating bower package.')
+    bower.version = pkg.version
+    fs.writeFileSync(path.resolve('./bower.json'), JSON.stringify(bower, null, 2))
+  }
 })
 
 // Create a clean build
