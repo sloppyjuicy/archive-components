@@ -9,16 +9,22 @@ branches:
   except:
   - master
 deploy:
-  provider: releases
-  api_key:
-    secure: 05O2+fbQH6hLjOGnU8jqEF+WoBJ8oGqbCo1Ih0eVxwuVVfQugzQPntzxHlK3d/2P+qlA9Wnd68nxdXwYDqlos/8cDzhTXVJ6c5G6d1tfgjzoQxUYSA0AV/oZ6HxTU81+knwzwlBAB6/xbD8xA9Cpnoy+gcW3DoNuqUXE3IqgsrpBFqximCDzCuQ4xQ8ZMB69DuS3XKZcjgYZMfbPCQ/aw9hLJoFCFBa1k3JnJ7sj4M4dJeVcOcshTvU4FRKn0O15+8rEdzXMgub2BQ9Wh0v5Xr8KwwuKtBF9o3Lt3FKAxFbZrjZL7CPrZcvOuVbFQRAewetnzcDveZiwaDBCoNOCsr5Uq8vvIHc6PkA0z7EUAFH4mgbqLP8kONbRqbL8Xam2djmMBa/cAW/7jfrzqAUCWqWKV4vMfdNnPCSSM//sb+opJ2OlJDsRROxeZHHEjRyvoNie+04sG15LX2531IHPAdlFuKiaUt0CfiDEE5SDAIzCzoBJUpB2koxFnm8YR7ykHaMpQwDYjGE6KOD2SBg/OHzvcIbv98C9Vhkh3TKJAZset3sA+MpsVIicM5y/V5juBI/Lfqp4vBuVcaH+JHDIg8czVxSKPWUHjuv7qoFup9S4nUcc7trRmzdaEa7ksMVCIdlVP7Wu+DscJ7P2UnvWiv9YsM3z53xWQaw+H0hQ4xA=
-  file_glob: true
-  file:
-    - dist/*.min.js
-    - dist/*.html
-  skip_cleanup: true
-  on:
-    tags: true
+  - provider: releases
+    api_key:
+      secure: 05O2+fbQH6hLjOGnU8jqEF+WoBJ8oGqbCo1Ih0eVxwuVVfQugzQPntzxHlK3d/2P+qlA9Wnd68nxdXwYDqlos/8cDzhTXVJ6c5G6d1tfgjzoQxUYSA0AV/oZ6HxTU81+knwzwlBAB6/xbD8xA9Cpnoy+gcW3DoNuqUXE3IqgsrpBFqximCDzCuQ4xQ8ZMB69DuS3XKZcjgYZMfbPCQ/aw9hLJoFCFBa1k3JnJ7sj4M4dJeVcOcshTvU4FRKn0O15+8rEdzXMgub2BQ9Wh0v5Xr8KwwuKtBF9o3Lt3FKAxFbZrjZL7CPrZcvOuVbFQRAewetnzcDveZiwaDBCoNOCsr5Uq8vvIHc6PkA0z7EUAFH4mgbqLP8kONbRqbL8Xam2djmMBa/cAW/7jfrzqAUCWqWKV4vMfdNnPCSSM//sb+opJ2OlJDsRROxeZHHEjRyvoNie+04sG15LX2531IHPAdlFuKiaUt0CfiDEE5SDAIzCzoBJUpB2koxFnm8YR7ykHaMpQwDYjGE6KOD2SBg/OHzvcIbv98C9Vhkh3TKJAZset3sA+MpsVIicM5y/V5juBI/Lfqp4vBuVcaH+JHDIg8czVxSKPWUHjuv7qoFup9S4nUcc7trRmzdaEa7ksMVCIdlVP7Wu+DscJ7P2UnvWiv9YsM3z53xWQaw+H0hQ4xA=
+    file_glob: true
+    file:
+      - dist/*.min.js
+      - dist/*.html
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: npm
+    email: sysadmin@coreybutler.com
+    api_key:
+      secure: "tOMuflK9JqZWrB5xW/BsUCoJTiVOhMZE9G8JVtETk+8Pfld9Sq45ZRPjG3cWhXjLlqTpZXlwAZ6SqA5IrqOnHRC57Ep4/DDofJep7SYW5WqkcNckDHlAxca1Os/3BZ3nFL6rRP9SKFK8YBmPAOd4VqfIEfr6SC09zpgnuNx1FkwLxnAFW1AB64kz/ryB2088E4FQ4WLlJYNyuXyn3FEktPTzaIs1k56ZmcQRyZ8+vbiyr9z2uzXYFluXvzBEz/UXa5N1AcGY5jJ6DK3PJVU5NwdJoZ/iyHnn0YOHw8ctIKu6qYk33FQ+KFlbkmiQ0ydHEmqPcIDVay8YJe8P2zgJpCiQDEldagtVDOi8OO2jKeIfQALmcAnIg5zGnmLYVA0/+gqPcrrPM1bvbqslGtc1wCcolFEDoJEkXortJDr6KHw3zuZbydHmmo5GG8KEiRr67gCTPHnPakXH4WrMg/7zEqvNNgElIVGPfU6KH+e2Db/hFmIo+Haxp9BY/T/HImMiuAhAVZ5gQ802zoHha94NlPDvHM/0G3ff2txeIwz+4Vo/tecOlUw4196ZENqVkUcdpEjh4nM9Gh6VmYlTR1z6+XLW7kwgOIkxcflQEKwdKvpcFVoFPzwkfJWH6G2QGcPGV3Ktwvat0Fxv8uS6XL0tjnmnp9s5IZ9Mr73wlUVtSQQ="
+    on:
+      tags: true
 cache:
   directories:
   - node_modules
