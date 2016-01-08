@@ -1,0 +1,23 @@
+language: node_js
+node_js:
+- 4.2.1
+sudo: false
+before_script:
+- npm install -g gulp
+before_deploy: gulp build
+deploy:
+- provider: releases
+  file:
+  - dist/*.min.js
+  - dist/*.html
+  - bower.json
+  skip_cleanup: true
+  on:
+    tags: true
+cache:
+  directories:
+  - node_modules
+notifications:
+  hipchat:
+    rooms:
+      secure: zsZ0x0mWt2ffzMPrKHvdu81eKbytVZbR04uS7L4fs+m6/f1Xr7nCDBoH3a3TVYIq7gkx/M/ce5nusHd65gc/RHiheBNJJDLSVjamuxWi2iHT5+11+H6Xa3WYGwgcoL1mWMahE3nZhO7aW8kwV7h7yIgq0VbU2IcCjwxP8zPtTSalXWHDPHgiMGZHA8SKbS2e065aDMaCNqfZR7txuwMpuFPfl2nFNeFKFK8PRsDgOqf0Pen855AnAkT3oeTtVWPSMnMQHfzfDtG6FpGA9QQiZZqLq5DQzz0Xo5AER7Y52tGaJPdRwINwObHYhYdCqM7MspGpXcc8FYCtB+YxDs0D3crzO+Dvl7vumunlpsl6iQDZCc9Cf/n7tZv9JkXMWFLblWYCpXeQxi2eojVff6C0n87Yj9qtCFqihI14hAR3j8fzfVGSrBS7TJIwDy9XPrdyyOfWEtTsM2OaXrvdOTQKk3eR6RDx8A8OqcMvHtN7VjAVQyArFELYq1ZyBjn95+e/F8LwT8LQ/PK9mYIgYrKs2auOwxHKCoff2LLbgkBUFaKWd5m1gaaq396cneTSB3LaoH/kU5gdsoO79CabrT2yfT0RcC+zHn+q1kOQfkoACvWSRhkppvr+sB7WQqi1scTucln//5LcMMkYbqhxk5lCi1Lu3JOJsevN1P4Z8M0yGL4=
