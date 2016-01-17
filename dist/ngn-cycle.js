@@ -8,7 +8,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
     initTpl: {
       enumerable: false,
       value: function () {
-	var content = '<template> <style> @charset "UTF-8"; div { display: flex; flex: 1 1 auto; border: 1px solid red; } div > section { display: none; flex: 1 1 auto; } ::content > section { display: none; flex: 1 1 auto; } div > section.active { display: flex; } ::content > section.active { display: flex; } </style> <div> <content></content> </div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
+	var content = '<template> <style> @charset "UTF-8"; div { display: flex; flex: 1 1 auto; } div > section { display: none; flex: 1 1 auto; } ::content > section { display: none; flex: 1 1 auto; } div > section.active { display: flex; } ::content > section.active { display: flex; } </style> <div> <content></content> </div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
 	var shadow = this.createShadowRoot()
 	var ph = document.createElement('p')
 	ph.insertAdjacentHTML('afterbegin', content)
