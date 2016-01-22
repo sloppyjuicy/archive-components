@@ -1,6 +1,8 @@
 # ngn-cycle
 
-This custom element will display one section at a time.
+This custom element will display one section at a time. Useful for wizards,
+scrollers, tab navigation, or anything else that needs to display one
+thing at a time.
 
 ### Example
 
