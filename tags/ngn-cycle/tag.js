@@ -1,10 +1,5 @@
 var NgnCycle = document.registerElement('ngn-cycle', {
   prototype: Object.create(HTMLElement.prototype, {
-    history: {
-      enumerable: false,
-      value: []
-    },
-
     initTpl: {
       enumerable: false,
       value: function () {
@@ -36,13 +31,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
 
     createdCallback: {
       value: function () {
-        var me = this
-
         this.initTpl()
-
-        this.addEventListener('change', function (e) {
-          me.history.push(e.detail)
-        })
       }
     },
 
@@ -60,7 +49,8 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         if (curr && next) {
           next.classList.add('active')
         } else if (this.getAttribute('restart') === 'true') {
-          next = this.querySelector('section')
+          // next = this.querySelector('section')
+          next = this.children[0]
           next.classList.add('active')
         }
         this.dispatchEvent(new CustomEvent('change', {
@@ -87,13 +77,18 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         if (curr && prev) {
           prev.classList.add('active')
         } else if (this.getAttribute('restart') === 'true') {
-          prev = this.querySelector('section:last-of-type')
+          // If current selection is first, display the last
+          if (curr === this.children[0]) {
+            prev = this.children[this.children.length - 1]
+          } else {
+            prev = this.children[0]
+          }
           prev.classList.add('active')
         }
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
             next: curr || null,
-            section: curr || null
+            section: prev || null
           }
         }))
         callback && callback(prev || null)
@@ -122,20 +117,23 @@ var NgnCycle = document.registerElement('ngn-cycle', {
     },
 
     /**
-     * @method back
-     * Go back in the history.
-     * @param {number} [index=1]
-     * The number of actions to revert through.
+     * @method first
+     * A helper method to display the first section.
      */
-    back: {
+    first: {
       value: function (i) {
-        i = i || 1
-        var action = this.history[this.history.length - i]
-        this.history.splice(this.history.length - i, this.history.length)
-        action = action.previous ? action.previous : action.next
-        this.querySelector('section.active').classList.remove('active')
-        action.classList.add('active')
+        this.show(1)
       }
-    }
+    },
+
+    /**
+     * @method last
+     * A helper method to display the first section.
+     */
+    last: {
+      value: function (i) {
+        this.show(this.children.length)
+      }
+    },
   })
 })
