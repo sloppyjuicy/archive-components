@@ -58,7 +58,7 @@ you're interested in.
 If you're using these components in a production website, it is probably best to
 use the concatenation features of JSDelivr. Select the components you wish to use
 and include them in one HTTP request. Alternatively, you may find
-[NGN Chassis HTTP Preconnect](https://github.com/ngnjs/chassis-lib/blob/master/src/http.js#L607)
+[NGN Chassis HTTP Preconnect](https://github.com/ngnjs/chassis-lib/blob/master/src/http.js#L631)
 helpful, or use `preconnect` directly in the `<head>` of your HTML page. For
 more information about preconnect, see
 [Ilya Grigorik's Preconnect article](https://www.igvita.com/2015/08/17/eliminating-roundtrips-with-preconnect/).
