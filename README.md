@@ -5,6 +5,7 @@ library is designed to isolate common functionality and deliver it in a simple,
 reusable manner.
 
 For a list of components, see the [custom tags directory](./tree/master/tags).
+You can also see these elements in action by looking at the [examples site](http://ngnjs.github.io/chassis-components/documentation).
 Unfamiliar with NGN? Head over to the [ngn.js.org](http://ngn.js.org).
 
 ## Using NGN Web Components
