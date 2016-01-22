@@ -1,10 +1,9 @@
-var {{TagVariableName}} = document.registerElement('{{TagName}}', {
+var NgnLayout = document.registerElement('ngn-layout', {
   prototype: Object.create(HTMLElement.prototype, {
-
     initTpl: {
       enumerable: false,
       value: function () {
-        var tag = '{{TagName}}'
+        var tag = 'ngn-layout'
         var src = document.querySelector('script[src*="' + tag + '"]') || document.querySelector('link[href*="' + tag + '.html"]')
         if (src) {
           src = (src.hasAttribute('src') ? src.getAttribute('src') : src.getAttribute('href')).replace(/\\/g, '/')
@@ -33,6 +32,7 @@ var {{TagVariableName}} = document.registerElement('{{TagName}}', {
     createdCallback: {
       value: function () {
         this.initTpl()
+        var me = this
       }
     }
   })

@@ -1,32 +1,70 @@
 <!DOCTYPE html>
 <html class="no-js">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width">
-  <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-  <!-- <link rel="import" href="../../ngn-cycle.html"/> -->
-  <!-- <script src="../../dist/ngn-cycle.min.js"></script> -->
-  <script src="../../tags/ngn-cycle/tag.js"></script>
-</head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <!-- <link rel="import" href="../../ngn-cycle.html"/> -->
+    <!-- <script src="../../dist/ngn-cycle.min.js"></script> -->
+    <script src="../../tags/ngn-cycle/tag.js"></script>
+    <style>
+      ngn-cycle {
+        display: block;
+        border: 1px solid black;
+        margin-top: 12px;
+      }
+      ngn-cycle > section {
+        padding: 12px;
+      }
+      ngn-cycle > section:nth-of-type(2) {
+        background-color: gold;
+      }
+      ngn-cycle > section:nth-of-type(3) {
+        background-color: #336699;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="prev">Previous</button>
+    <button id="next">Next</button>
+    <select id="picker">
+      <option value="1">Slide 1</option>
+      <option value="2">Slide 2</option>
+      <option value="3">Slide 3</option>
+    </select>
+    <ngn-cycle restart="true">
+      <section class="active">
+        Screen 1
+      </section>
+      <section>
+        Screen 2
+      </section>
+      <section>
+        Screen 3
+      </section>
+    </ngn-cycle>
+    <script type="text/javascript">
+      var cycle = document.querySelector('ngn-cycle')
 
-<body>
-  <ngn-cycle restart="true">
-    <section class="active">
-      Screen 1
-    </section>
-    <section>
-      Screen 2
-    </section>
-    <section>
-      Screen 3
-    </section>
-  </ngn-cycle>
-  <script type="text/javascript">
-    document.querySelector('ngn-cycle').addEventListener('change', function (e) {
-      console.log(e.detail)
-    })
-  </script>
-</body>
+      cycle.addEventListener('change', function (e) {
+        console.log(e.detail)
+      })
 
+      document.querySelector('#next').addEventListener('click', function (e) {
+        e.preventDefault()
+        cycle.next()
+      })
+
+      document.querySelector('#prev').addEventListener('click', function (e) {
+        e.preventDefault()
+        cycle.previous()
+      })
+
+      document.querySelector('select').addEventListener('change', function (e) {
+        cycle.show(e.target.selectedOptions[0].value)
+      })
+    </script>
+  </body>
 </html>

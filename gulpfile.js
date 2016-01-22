@@ -20,6 +20,7 @@ const DIR = {
 
 // Build a release
 gulp.task('build', ['version', 'clean', 'copy'])
+gulp.task('default', ['create'])
 
 // Check versions for Bower & npm
 gulp.task('version', function (next) {
@@ -97,7 +98,7 @@ gulp.task('copy', function () {
     })
     fs.writeFileSync(path.join(DIR.dist, dir + '.js'), str)
     fs.writeFileSync(path.join(DIR.dist, dir + '.min.js'), headerComment + c.code)
-    fs.writeFileSync(path.join(DIR.dist, dir + '.html'), '<script src="text/javascript">\n' + headerComment + c.code + '\n</script>')
+    fs.writeFileSync(path.join(DIR.dist, dir + '.html'), '<script type="text/javascript">\n' + headerComment + c.code + '\n</script>')
   })
 })
 
@@ -124,10 +125,14 @@ gulp.task('create', function () {
       name: 'tpl',
       message: 'Create an HTML Shadow DOM template?',
       'default': true
+    },{
+      type: 'confirm',
+      name: 'example',
+      message: 'Create an example HTML page (for documentation)?',
+      'default': true
     }], function (a) {
       // Create the new source directory
       let d = path.join(DIR.source, a.tag.toLowerCase())
-      console.log(d)
       fs.mkdirSync(d)
 
       // Add the templates
@@ -139,6 +144,12 @@ gulp.task('create', function () {
       }).join('')
 
       let tpl = [{name: 'tag.js', tpl: tag }, {name:'README.md', tpl: readme}]
+      if (a.example) {
+        tpl.push({
+          name: '../../documentation/examples/example-' + a.tag + '.html',
+          tpl: fs.readFileSync(path.join(DIR.source, 'example.html.template')).toString()
+        })
+      }
       if (a.tpl) {
         tpl.push({
           name: 'template.html',

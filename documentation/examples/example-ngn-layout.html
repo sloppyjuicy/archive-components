@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <!-- <link rel="import" href="../../ngn-layout.html"/> -->
+    <!-- <script src="../../dist/ngn-layout.min.js"></script> -->
+    <script src="../../tags/ngn-layout/tag.js"></script>
+    <style>
+      #three {
+        max-width: 200px;
+      }
+      ngn-layout {
+        border: 1px solid rgba(0,0,0,.5)
+      }
+    </style>
+  </head>
+  <body>
+    <ngn-layout type="viewport">
+      <ngn-layout>
+        Column 1
+      </ngn-layout>
+      <ngn-layout>
+        Column 2
+      </ngn-layout>
+      <ngn-layout type="vertical" id="three">
+        Testing 2
+        <ngn-layout style="flex: 1 1 auto;">
+          SubSection A
+        </ngn-layout>
+        <ngn-layout type="horizontal">
+          <ngn-layout>
+            SubSection B
+          </ngn-layout>
+          <ngn-layout>
+            SubSection C
+          </ngn-layout>
+        </ngn-layout>
+      </ngn-layout>
+    </ngn-layout>
+  </body>
+</html>
