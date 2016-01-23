@@ -3,10 +3,16 @@
 module.exports = function (component, callback) {
   if (document) {
     component = (Array.isArray(component) : Array : [component])
+    let ct = component.length
+    let done = function () {
+      ct--
+      ct === 0 && callback()
+    }
     component.forEach(function (tag) {
       var s = document.createElement('script')
       s.setAttribute('type', 'text/javascript')
       s.setAttribute('src', require('path').join(__dirname, 'dist/' + tag + '.min.js'))
+      s.onload = done
       document.head.appendChild(s)
     })
   } else {
