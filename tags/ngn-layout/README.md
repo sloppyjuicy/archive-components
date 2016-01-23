@@ -72,10 +72,10 @@ The code above creates a simple modular layout.
 
 There are three values that can be applied to this:
 
-- **horizontal**: This is the default setting. All content within a horizontal
+- **horizontal**: All content within a horizontal
   layout will be shown side by side in a row-like fashion.  
-- **vertical**: All content within a vertical layout will be shown stacked on
-  top of each other in a column-like manner.
+- **vertical**: This is the default setting. All content within a vertical
+  layout will be shown stacked on top of each other in a column-like manner.
 - **viewport**: This is a special type that will expand to use the maximum
   amount of space. For example, setting the first layout to be viewport will
   consume the entire page (as is shown in the example above).
