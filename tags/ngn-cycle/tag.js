@@ -56,7 +56,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
             previous: curr || null,
-            section: next || null
+            el: next || null
           }
         }))
         callback && callback(next || null)
@@ -88,7 +88,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
             next: curr || null,
-            section: prev || null
+            el: prev || null
           }
         }))
         callback && callback(prev || null)
@@ -110,7 +110,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
             previous: curr || null,
-            section: next || null
+            el: next || null
           }
         }))
       }
@@ -118,7 +118,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
 
     /**
      * @method first
-     * A helper method to display the first section.
+     * A helper method to display the first element.
      */
     first: {
       value: function (i) {
@@ -128,7 +128,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
 
     /**
      * @method last
-     * A helper method to display the first section.
+     * A helper method to display the first element.
      */
     last: {
       value: function (i) {

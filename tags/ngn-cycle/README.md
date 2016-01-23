@@ -1,6 +1,6 @@
 # ngn-cycle
 
-This custom element will display one section at a time. Useful for wizards,
+This custom element will display one HTML element at a time. Useful for wizards,
 scrollers, tab navigation, or anything else that needs to display one
 thing at a time.
 
@@ -95,7 +95,7 @@ payload to the event handler:
   detail: {
     previous: <HTMLElement>, // Only for show() and next()
     next: <HTMLElement>, // Only for previous()
-    section: <HTMLElement>
+    el: <HTMLElement> // The newly selected element.
   }
 }
 ```

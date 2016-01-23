@@ -3,7 +3,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
     initTpl: {
       enumerable: false,
       value: function () {
-	var content = '<template> <style> @charset "UTF-8"; div { display: flex; flex: 1 1 auto; } div > section { display: none; flex: 1 1 auto; } ::content > section { display: none; flex: 1 1 auto; } div > section.active { display: flex; } ::content > section.active { display: flex; } </style> <div id="host"> <content></content> </div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
+	var content = '<template> <style> @charset "UTF-8"; div { display: flex; flex: 1 1 auto; } div > * { display: none; flex: 1 1 auto; } ::content > * { display: none; flex: 1 1 auto; } div > .active { display: flex; } ::content > .active { display: flex; } </style> <div id="host"> <content></content> </div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
 	var shadow = this.createShadowRoot()
 	var ph = document.createElement('p')
 	ph.insertAdjacentHTML('afterbegin', content)
@@ -42,7 +42,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
             previous: curr || null,
-            section: next || null
+            el: next || null
           }
         }))
         callback && callback(next || null)
@@ -74,7 +74,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
             next: curr || null,
-            section: prev || null
+            el: prev || null
           }
         }))
         callback && callback(prev || null)
@@ -96,7 +96,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
             previous: curr || null,
-            section: next || null
+            el: next || null
           }
         }))
       }
@@ -104,7 +104,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
 
     /**
      * @method first
-     * A helper method to display the first section.
+     * A helper method to display the first element.
      */
     first: {
       value: function (i) {
@@ -114,7 +114,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
 
     /**
      * @method last
-     * A helper method to display the first section.
+     * A helper method to display the first element.
      */
     last: {
       value: function (i) {
