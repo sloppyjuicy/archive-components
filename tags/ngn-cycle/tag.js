@@ -44,7 +44,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
     next: {
       value: function (callback) {
         var curr = this.querySelector('.active')
-        var next = curr.nextElementSibling
+        var next = curr ? curr.nextElementSibling : null
         curr && curr.classList.remove('active')
         if (curr && next) {
           next.classList.add('active')
@@ -72,7 +72,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
     previous: {
       value: function (callback) {
         var curr = this.querySelector('.active')
-        var prev = curr.previousElementSibling
+        var prev = curr ? curr.previousElementSibling : null
         curr && curr.classList.remove('active')
         if (curr && prev) {
           prev.classList.add('active')
