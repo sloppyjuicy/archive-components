@@ -5,3 +5,5 @@ _*
 *.log
 !dist/*
 *.html
+*.js
+!*.min.js
