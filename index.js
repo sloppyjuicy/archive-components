@@ -2,7 +2,7 @@
 
 module.exports = function (component, callback) {
   if (document) {
-    component = (Array.isArray(component) : Array : [component])
+    component = Array.isArray(component) ? component : [component]
     let ct = component.length
     let done = function () {
       ct--
