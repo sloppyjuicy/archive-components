@@ -43,7 +43,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
      */
     next: {
       value: function (callback) {
-        var curr = this.querySelector('section.active')
+        var curr = this.querySelector('.active')
         var next = curr.nextElementSibling
         curr && curr.classList.remove('active')
         if (curr && next) {
@@ -71,7 +71,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
      */
     previous: {
       value: function (callback) {
-        var curr = this.querySelector('section.active')
+        var curr = this.querySelector('.active')
         var prev = curr.previousElementSibling
         curr && curr.classList.remove('active')
         if (curr && prev) {
@@ -103,9 +103,9 @@ var NgnCycle = document.registerElement('ngn-cycle', {
      */
     show: {
       value: function (i) {
-        var curr = this.querySelector('section.active')
+        var curr = this.querySelector('.active')
         curr && curr.classList.remove('active')
-        var next = this.querySelector('section:nth-of-type(' + i + ')')
+        var next = this.children[i - 1]
         next && next.classList.add('active')
         this.dispatchEvent(new CustomEvent('change', {
           detail: {
