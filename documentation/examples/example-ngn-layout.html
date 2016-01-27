@@ -15,27 +15,33 @@
       ngn-layout {
         border: 1px solid rgba(0,0,0,.5)
       }
+      body {
+        background: gold;
+      }
     </style>
   </head>
   <body>
     <ngn-layout type="viewport">
-      <ngn-layout>
-        Column 1
-      </ngn-layout>
-      <ngn-layout>
-        Column 2
-      </ngn-layout>
-      <ngn-layout type="vertical" id="three">
-        Testing 2
+      <ngn-layout type="horizontal">
         <ngn-layout>
-          SubSection A
+          Column 1
         </ngn-layout>
-        <ngn-layout type="horizontal">
+        <ngn-layout>
+          Column 2
+          <div style="background: pink;">yo</div>
+        </ngn-layout>
+        <ngn-layout id="three">
+          Testing 2
           <ngn-layout>
-            SubSection B
+            SubSection A
           </ngn-layout>
           <ngn-layout>
-            SubSection C
+            <ngn-layout>
+              SubSection B
+            </ngn-layout>
+            <ngn-layout>
+              SubSection C
+            </ngn-layout>
           </ngn-layout>
         </ngn-layout>
       </ngn-layout>
