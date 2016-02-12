@@ -1,5 +1,5 @@
-var NgnCycle = document.registerElement('ngn-cycle', {
-  prototype: Object.create(HTMLElement.prototype, {
+var NgnCycle = document.registerElement('ngn-cycle', { // eslint-disable-line no-unused-vars
+  prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
     initTpl: {
       enumerable: false,
       value: function () {
@@ -76,7 +76,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
           next = this.children[0]
           next.classList.add('active')
         }
-        this.dispatchEvent(new CustomEvent('change', {
+        this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
             previous: curr || null,
             el: next || null
@@ -108,7 +108,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
           }
           prev.classList.add('active')
         }
-        this.dispatchEvent(new CustomEvent('change', {
+        this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
             next: curr || null,
             el: prev || null
@@ -130,7 +130,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
         curr && curr.classList.remove('active')
         var next = this.children[i - 1]
         next && next.classList.add('active')
-        this.dispatchEvent(new CustomEvent('change', {
+        this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
             previous: curr || null,
             el: next || null
@@ -157,6 +157,6 @@ var NgnCycle = document.registerElement('ngn-cycle', {
       value: function (i) {
         this.show(this.children.length)
       }
-    },
+    }
   })
 })
