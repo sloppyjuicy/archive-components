@@ -16,7 +16,8 @@
     "ngn",
     "web",
     "components",
-    "chassis"
+    "chassis",
+    "webcomponent"
   ],
   "author": {
     "name": "Corey Butler",
