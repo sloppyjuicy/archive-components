@@ -40,15 +40,7 @@ var NgnCycle = document.registerElement('ngn-cycle', {
     selectedIndex: {
       get: function () {
         var el = this.querySelector('.active')
-<<<<<<< Updated upstream
         return Array.prototype.slice.call(el.parentNode.children).indexOf(el)
-=======
-<<<<<<< Updated upstream
-        return Array.prototype.slice.call(el.parentNode.children).indexOf(el)
-=======
-        return NGN._slice(el.parentNode.children).indexOf(el)
->>>>>>> Stashed changes
->>>>>>> Stashed changes
       }
     },
 
