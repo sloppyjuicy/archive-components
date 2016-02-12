@@ -22,6 +22,37 @@ var NgnCycle = document.registerElement('ngn-cycle', {
     },
 
     /**
+     * @property selected
+     * The current active section.
+     * @return {HTMLElement}
+     */
+    selected: {
+      get: function () {
+        return this.querySelector('.active')
+      }
+    },
+
+    /**
+     * @property selectedIndex
+     * The index number of the current active section.
+     * @return {Number}
+     */
+    selectedIndex: {
+      get: function () {
+        var el = this.querySelector('.active')
+<<<<<<< Updated upstream
+        return Array.prototype.slice.call(el.parentNode.children).indexOf(el)
+=======
+<<<<<<< Updated upstream
+        return Array.prototype.slice.call(el.parentNode.children).indexOf(el)
+=======
+        return NGN._slice(el.parentNode.children).indexOf(el)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+      }
+    },
+
+    /**
      * @method next
      * Display the next screen.
      * @param {function} callback
