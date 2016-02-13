@@ -64,7 +64,8 @@
       "XMLHttpRequest",
       "FormData",
       "btoa",
-      "localStorage"
+      "localStorage",
+      "MutationObserver"
     ]
   }
 }

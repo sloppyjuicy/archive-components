@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <!-- <link rel="import" href="../../ngn-listitem.html"/> -->
+    <!-- <script src="../../dist/ngn-listitem.min.js"></script> -->
+    <script src="../../tags/ngn-list/tag.js"></script>
+    <style>
+      html, body {
+        display: flex;
+        flex-direction: column;
+      }
+      ngn-list {
+        border: 1px solid black;
+        display: list-item;
+        flex-direction: column;
+        align-content: stretch;
+      }
+      section {
+        display: block;
+        flex: 1 1 auto;
+        border: 1px dashed rgba(0,0,0, .1);
+        margin: 3px 0;
+      }
+      section[selected] {
+        background-color: #336699;
+        color: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <ngn-list>
+      <section>A</section>
+      <section selected>B</section>
+      <section>C</section>
+      <section>D</section>
+      <section>E</section>
+      <section>F</section>
+      <section>G</section>
+      <section>H</section>
+    </ngn-list>
+    <script type="text/javascript">
+      var li = document.querySelector('ngn-list')
+
+      li.addEventListener('item.create', function (e) {
+        console.info('Created', e.detail.item)
+      })
+      li.addEventListener('item.delete', function (e) {
+        console.warn('Deleted', e.detail.item)
+      })
+
+      setTimeout(function () {
+        li.insertAdjacentHTML('beforeend', '<section>z</section>')
+        setTimeout(function () {
+          li.removeChild(li.children[li.children.length - 1])
+        }, 1500)
+      }, 500)
+    </script>
+  </body>
+</html>
