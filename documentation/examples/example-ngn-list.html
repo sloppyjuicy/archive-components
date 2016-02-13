@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script> -->
     <!-- <link rel="import" href="../../ngn-listitem.html"/> -->
     <!-- <script src="../../dist/ngn-listitem.min.js"></script> -->
     <script src="../../tags/ngn-list/tag.js"></script>
@@ -13,8 +13,21 @@
         display: flex;
         flex-direction: column;
       }
+      header {
+        display: flex;
+        flex-direction: row;
+        margin: 6px 0;
+        padding: 6px;
+        background-color: rgba(0,0,0,.85);
+        border-radius: 3px;
+      }
+      button {
+        max-width: 150px;
+        margin-right: 6px;
+      }
       ngn-list {
         border: 1px solid black;
+        border-radius: 3px;
         display: list-item;
         flex-direction: column;
         align-content: stretch;
@@ -24,38 +37,115 @@
         flex: 1 1 auto;
         border: 1px dashed rgba(0,0,0, .1);
         margin: 3px 0;
+        -webkit-user-select: none
       }
-      section[selected] {
+      section[selected="true"] {
         background-color: #336699;
         color: #ffffff;
+      }
+      section[filter="true"] {
+        position: relative;
+        opacity: .2;
+      }
+      section[filter="true"]:after {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        content: 'Filtered';
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     </style>
   </head>
   <body>
+    <header>
+      <button>Apply Filter</button>
+      <button>Select All</button>
+      <button>Clear Selected</button>
+      <button>Invert Selection</button>
+      <button>Apply Next</button>
+      <button>Apply Previous</button>
+    </header>
     <ngn-list>
-      <section>A</section>
-      <section selected>B</section>
-      <section>C</section>
-      <section>D</section>
-      <section>E</section>
-      <section>F</section>
-      <section>G</section>
-      <section>H</section>
+      <section>A1</section>
+      <section>B2</section>
+      <section>C2</section>
+      <section>D3</section>
+      <section>E3</section>
+      <section>F3</section>
+      <section>G4</section>
+      <section>H4</section>
+      <section>I4</section>
+      <section>J4</section>
     </ngn-list>
+    <ol>
+      <li>The filter applies to anything ending in "3".</li>
+      <li>"Apply Next" will replicate the current item state (selected or not) to the next item.</li>
+      <li>"Apply Previous" is the same as "Apply Next", but for the prior item.</li>
+    </ol>
     <script type="text/javascript">
-      var li = document.querySelector('ngn-list')
+      var list = document.querySelector('ngn-list')
 
-      li.addEventListener('item.create', function (e) {
+      list.addEventListener('item.create', function (e) {
         console.info('Created', e.detail.item)
       })
-      li.addEventListener('item.delete', function (e) {
+      list.addEventListener('item.delete', function (e) {
         console.warn('Deleted', e.detail.item)
       })
 
+      var filterButton = document.querySelector('button:first-of-type')
+      var selectAllButton  = document.querySelector('button:nth-of-type(2)')
+      var clearSelectionButton  = document.querySelector('button:nth-of-type(3)')
+      var invertSelectionButton  = document.querySelector('button:nth-of-type(4)')
+      var applyNextButton  = document.querySelector('button:nth-of-type(5)')
+      var applyPreviousButton  = document.querySelector('button:nth-of-type(6)')
+
+      filterButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        console.log(filterButton.innerHTML)
+        if (filterButton.innerHTML !== 'Clear Filter') {
+          list.filter(function (element, index, itemarray) {
+            return element.textContent.substr(1, 1) === '3'
+          })
+          filterButton.innerHTML = 'Clear Filter'
+        } else {
+          list.clearFilter()
+          filterButton.innerHTML = 'Apply Filter'
+        }
+      })
+
+      selectAllButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        list.selectAll()
+      })
+
+      clearSelectionButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        list.clearSelected()
+      })
+
+      invertSelectionButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        list.invertSelection()
+      })
+
+      applyNextButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        list.next()
+      })
+
+      applyPreviousButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        list.previous()
+      })
+
       setTimeout(function () {
-        li.insertAdjacentHTML('beforeend', '<section>z</section>')
+        list.insertAdjacentHTML('beforeend', '<section>z</section>')
         setTimeout(function () {
-          li.removeChild(li.children[li.children.length - 1])
+          list.removeChild(list.children[list.children.length - 1])
         }, 1500)
       }, 500)
     </script>

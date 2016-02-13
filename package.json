@@ -65,7 +65,8 @@
       "FormData",
       "btoa",
       "localStorage",
-      "MutationObserver"
+      "MutationObserver",
+      "CustomEvent"
     ]
   }
 }
