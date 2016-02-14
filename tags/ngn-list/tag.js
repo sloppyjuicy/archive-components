@@ -7,38 +7,21 @@
  * @fires item.delete
  * Fired when an item is removed from the list. The item which is
  * removed is returned to the event handler.
+ * @fires item.select
+ * Fired when an item is selected from the list. The item which is
+ * selected is returned to the event handler.
+ * @fires item.unselect
+ * Fired when a previously selected item is unselected. The item which is
+ * unselected is returned to the event handler.
+ * @fires item.filter
+ * Fired when an item is filtered from the list. The item which is
+ * filtered is returned to the event handler.
+ * @fires item.unfilter
+ * Fired when a previously filtered item is unselected. The item which is
+ * unfiltered is returned to the event handler.
  */
 var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-undef, no-unused-vars
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
-    initTpl: {
-      enumerable: false,
-      value: function () {
-        var tag = 'ngn-list'
-        var src = document.querySelector('script[src*="' + tag + '"]') || document.querySelector('link[href*="' + tag + '.html"]')
-        if (src) {
-          src = (src.hasAttribute('src') ? src.getAttribute('src') : src.getAttribute('href')).replace(/\\/g, '/')
-          src = src.split('/')
-          src.pop()
-          src = src.join('/') + '/template.html'
-          var req = new XMLHttpRequest()
-          var me = this
-          req.addEventListener('load', function () {
-            var content = this.responseText.replace(/\n|\s+/g, ' ').replace(/\s\s/g, ' ').replace(/<(\/?)template(.*?)>/gi, '')
-            var shadow = me.createShadowRoot()
-            var ph = document.createElement('p')
-            ph.insertAdjacentHTML('afterbegin', content)
-            Array.prototype.slice.call(ph.children).forEach(function (el) {
-              shadow.appendChild(document.importNode(el, true))
-            })
-          })
-          req.open('GET', src)
-          req.send()
-        } else {
-          this.createShadowRoot()
-        }
-      }
-    },
-
     slice: {
       enumerable: false,
       writable: false,
@@ -57,59 +40,280 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       }
     },
 
+    getItemAt: {
+      enumerable: false,
+      value: function (i) {
+        return this.slice(this.children)[i] || null
+      }
+    },
+
+    isSelected: {
+      enumerable: false,
+      value: function (el) {
+        return el.getAttribute('selected') === 'true'
+      }
+    },
+
+    isFiltered: {
+      enumerable: false,
+      value: function (el) {
+        return el.getAttribute('filter') === 'true'
+      }
+    },
+
+    toggleSelection: {
+      enumerable: false,
+      value: function (el) {
+        if (this.isSelected(el)) {
+          el.removeAttribute('selected')
+          this.dispatchEvent(new CustomEvent('item.unselect', {
+            detail: {
+              item: el
+            }
+          }))
+        } else {
+          el.setAttribute('selected', 'true')
+          this.dispatchEvent(new CustomEvent('item.select', {
+            detail: {
+              item: el
+            }
+          }))
+        }
+      }
+    },
+
+    toggleFilter: {
+      enumerable: false,
+      value: function (el) {
+        if (this.isFiltered(el)) {
+          el.removeAttribute('filter')
+          this.dispatchEvent(new CustomEvent('item.unfilter', {
+            detail: {
+              item: el
+            }
+          }))
+        } else {
+          el.setAttribute('filter', 'true')
+          this.dispatchEvent(new CustomEvent('item.filter', {
+            detail: {
+              item: el
+            }
+          }))
+        }
+      }
+    },
+
+    filterItem: {
+      value: function (el) {
+        if (!this.isFiltered(el)) {
+          this.toggleFilter(el)
+        }
+      }
+    },
+
+    unfilterItem: {
+      value: function (el) {
+        if (this.isFiltered(el)) {
+          this.toggleFilter(el)
+        }
+      }
+    },
+
+    selectItem: {
+      value: function (el) {
+        if (!this.isSelected(el)) {
+          this.toggleSelection(el)
+        }
+      }
+    },
+
+    unselectItem: {
+      value: function (el) {
+        if (this.isSelected(el)) {
+          this.toggleSelection(el)
+        }
+      }
+    },
+
+    /**
+     * @method toggleRangeSelection
+     * Toggle the selection of items (by index). If you want to
+     * force a range to be selected or unselected regardless of the items'
+     * current state, use #selectRange or #unselectRange instead.
+     * @param {number} from
+     * The starting item index.
+     * @param {number} to
+     * The ending item index.
+     */
+    toggleRangeSelection: {
+      enumerable: true,
+      value: function (from, to) {
+        var start = from < to ? from : to
+        var end = from > to ? from : to
+        for (var i = start; i <= end; i++) {
+          this.toggleSelection(this.children[i])
+        }
+      }
+    },
+
+    selectRange: {
+      value: function (from, to) {
+        var start = from < to ? from : to
+        var end = from > to ? from : to
+        for (var i = start; i <= end; i++) {
+          this.selectItem(this.children[i])
+        }
+      }
+    },
+
+    unselectRange: {
+      value: function (from, to) {
+        var start = from < to ? from : to
+        var end = from > to ? from : to
+        for (var i = start; i <= end; i++) {
+          this.unselectItem(this.children[i])
+        }
+      }
+    },
+
+    nextItem: {
+      enumerable: false,
+      value: function (el) {
+        var next = el.nextSibling
+        while (next !== null && (next.nodeType === 3 || this.isFiltered(next))) {
+          next = next.nextSibling
+        }
+        return next
+      }
+    },
+
+    previousItem: {
+      enumerable: false,
+      value: function (el) {
+        var prev = el.previousSibling
+        while (prev !== null && (prev.nodeType === 3 || this.isFiltered(prev))) {
+          prev = prev.previousSibling
+        }
+        return prev
+      }
+    },
+
     // Applies event handlers to support selection.
     applyHandlers: {
       enumerable: false,
       writable: false,
       configurable: false,
       value: function (el, scope) {
-        scope = scope || this
+        var me = scope || this
 
         // Listen for click
         el.addEventListener('click', function (e) {
-          // If ctrl or shift is not held during click, don't aggregate selections
-          if (!(e.ctrlKey || e.altKey || scope.cmdKeyPressed || e.shiftKey)) {
-            scope.slice(scope.children).forEach(function (child) {
-              if (child !== el) {
-                child.hasAttribute('selected') && child.removeAttribute('selected')
-              }
-            })
-          } else {
-            // If ctrl or shift is held but there is no last selection, things are empty.
-            if (scope._lastSelection !== null) {
-              if (e.shiftKey) {
-                var prev = scope.indexOfParent(scope._lastSelection) // Previous selection
-                var curr = scope.indexOfParent(el) // Current selction
-                var dir = prev >= curr // Direction
-                while (prev !== curr) {
-                  if (scope.children[prev].getAttribute('filter') !== 'true') {
-                    if (!(e.target.getAttribute('selected') === 'true')) {
-                      scope.children[prev].setAttribute('selected', 'true')
-                    } else {
-                      scope.children[prev].removeAttribute('selected')
-                    }
-                  }
-                  dir && prev--
-                  !dir && prev++
-                }
-              } else if (!e.ctrlKey && !e.altKey && !scope.cmdKeyPressed) {
-                if (scope.querySelectorAll('[selected="true"]:not([filter="true"])').length > 1) {
-                  scope.slice(scope.querySelectorAll('[selected="true"]:not([filter="true"])')).forEach(function (r) {
-                    if (r !== el) {
-                      r.removeAttribute('selected')
-                    }
-                  })
-                }
-              }
+          // If no command buttons are pressed, clear everything except the clicked item.
+          if (!me.holdingShift && !e.ctrlKey && !me.cmdKeyPressed && !e.altKey) {
+            me.clearSelected()
+            me.toggleSelection(el)
+            me.base = el
+            me.last = el
+            return
+          }
+
+          if (e.ctrlKey || e.altKey || me.cmdKeyPressed) {
+            if (me.holdingShift) {
+              me.toggleSelection(me.last)
+              me.toggleRangeSelection(me.indexOfParent(me.last), me.indexOfParent(el))
+              me.base && me.toggleSelection(me.base)
+            } else {
+              me.toggleSelection(el)
             }
+            me.last = el
+            return
           }
-          if (el.getAttribute('selected') === 'true') {
-            el.removeAttribute('selected')
-          } else {
-            el.setAttribute('selected', 'true')
+
+          // If the shift button is pressed, selections should accrue.
+          if (me.holdingShift) {
+            me.base = me.base || me.last || el
+            !(e.ctrlKey || e.altKey || me.cmdKeyPressed) && me.clearSelected()
+            me.toggleRangeSelection(me.indexOfParent(me.base), me.indexOfParent(el))
           }
-          scope._lastSelection = el
+          me.last = el
         })
+      }
+    },
+
+    /**
+     * @method next
+     * Applies the same state to the next item in the list.
+     * For example, if the last action was to select an item,
+     * the next item on the list will be selected. If the last
+     * action was to deselect an item, the next item will be
+     * deselected. This only applies to items that are not filtered.
+     * @param {boolean} [aggregateSelection=false]
+     * Set this to `true` to aggregate selections (i.e. don't
+     * unselect prior selections).
+     */
+    next: {
+      value: function (aggregate) {
+        // if (this.last === null) {
+        //   return false
+        // }
+        // aggregate = typeof aggregate === 'boolean' ? aggregate : this.holdingShift
+        // var next = this.last.nextSibling
+        // while (next !== null && (next.nodeType === 3 || next.getAttribute('filter') === 'true')) {
+        //   next = next.nextSibling
+        // }
+        // if (next === null) {
+        //   return
+        // }
+        //
+        // try {document.querySelector('.focus').classList.toggle('focus')} catch (er) {}
+        // next.classList.toggle('focus')
+        // if (!aggregate) {
+        //   console.log('not aggregating')
+        //   this.clearSelected()
+        //   next.setAttribute('selected', 'true')
+        //   this.last = next
+        //   return
+        // }
+        // this.toggleSelection(next)
+        // this.last = next
+      }
+    },
+
+    /**
+     * @method previous
+     * Applies the same state to the previous item in the list.
+     * For example, if the last action was to select an item,
+     * the previous item on the list will be selected. If the last
+     * action was to deselect an item, the previous item will be
+     * deselected. This only applies to items that are not filtered.
+     * @param {boolean} [aggregateSelection=false]
+     * Set this to `true` to aggregate selections (i.e. don't
+     * unselect prior selections).
+     */
+    previous: {
+      value: function (aggregate) {
+        // if (this.last === null) {
+        //   return false
+        // }
+        // aggregate = typeof aggregate === 'boolean' ? aggregate : this.holdingShift
+        // var prev = this.last.previousSibling
+        // while (prev !== null && (prev.nodeType === 3 || prev.getAttribute('filter') === 'true')) {
+        //   prev = prev.previousSibling
+        // }
+        // if (prev === null) {
+        //   return
+        // }
+        // try {document.querySelector('.focus').classList.toggle('focus')} catch (er) {}
+        // prev.classList.toggle('focus')
+        // if (!aggregate) {
+        //   console.log('not aggregating')
+        //   this.clearSelected()
+        //   prev.setAttribute('selected', 'true')
+        //   this.last = prev
+        //   return
+        // }
+        // this.toggleSelection(prev)
+        // this.last = prev
       }
     },
 
@@ -118,25 +322,62 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         var me = this
 
         Object.defineProperties(this, {
-          _lastSelection: {
-            enumerable: false,
-            writable: true,
-            configurable: false,
-            value: null
-          },
           cmdKeyPressed: {
             enumerable: false,
             writable: true,
             configurable: false,
             value: false
+          },
+          holdingShift: {
+            enumerable: false,
+            writable: true,
+            configurable: false,
+            value: false
+          },
+          base: {
+            enumerable: false,
+            writable: true,
+            configurable: false,
+            value: null
+          },
+          last: {
+            enumerable: false,
+            writable: true,
+            configurable: false,
+            value: null
           }
         })
 
-        if (this.children.length > 0) {
-          this._lastSelection = this.children[0]
-        }
+        // Add support for CMD key on OSX
+        window.addEventListener('keydown', function (e) {
+          // CMD on OSX
+          if (e.keyCode === 91) {
+            me.cmdKeyPressed = true
+          }
+          // Arrows
+          if (e.keyCode >= 37 && e.keyCode <= 40 && me._lastSelection !== null) {
+            if (e.keyCode >= 39) {
+              me.next(e.shiftKey || e.ctrlKey || e.altKey || me.cmdKeyPressed)
+            } else {
+              me.previous(e.shiftKey || e.ctrlKey || e.altKey || me.cmdKeyPresse)
+            }
+          }
+          // Shift
+          if (e.keyCode === 16) {
+            me.holdingShift = true
+          }
+        })
 
-        // this.initTpl()
+        window.addEventListener('keyup', function (e) {
+          // CMD on OSX
+          if (e.keyCode === 91) {
+            me.cmdKeyPressed = false
+          } // Shift
+          if (e.keyCode === 16) {
+            me.holdingShift = false
+            me.base = null
+          }
+        })
 
         // Apply event handlers to top level elements in the list
         this.slice(this.children).forEach(function (el) {
@@ -170,20 +411,13 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         observer.observe(this, {
           childList: true
         })
-
-        // Add support for CMD key on OSX
-        window.addEventListener('keydown', function (e) {
-          if (e.keyCode === 91) {
-            me.cmdKeyPressed = true
-          }
-        })
-        window.addEventListener('keyup', function (e) {
-          if (e.keyCode === 91) {
-            me.cmdKeyPressed = false
-          }
-        })
       }
     },
+
+    // getSelectedItems
+    // getFilteredItems
+    // getUnselectedItems
+    // getCurrentItems
 
     /**
      * @method selectAll
@@ -196,9 +430,12 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     selectAll: {
       value: function (force) {
         force = typeof force === 'boolean' ? force : false
+        var me = this
         this.slice(this.children).forEach(function (el) {
-          if (!force || el.getAttribute('filtered') === null) {
-            el.setAttribute('selected', true)
+          // console.log('force', !force, 'filtered', el.getAttribute('filtered') === null)
+          if (force || !me.isFiltered(el)) {
+            me.selectItem(el)
+            this.last = el
           }
         })
       }
@@ -211,78 +448,35 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     clearSelected: {
       value: function () {
+        var me = this
         this.slice(this.children).forEach(function (el) {
-          el.removeAttribute('selected')
+          me.unselectItem(el)
         })
+        for (var i = 0; i < this.children.length; i++) {
+          if (!this.isFiltered(this.children[i])) {
+            this.last = this.children[i]
+            break
+          }
+        }
       }
     },
 
     /**
      * @method invertSelected
      * Deselects any selected item and vice versa. This is
-     * a way to completely reverse the selection.
+     * a way to completely reverse the selection. Filtered
+     * items are ignored.
      */
     invertSelection: {
       value: function () {
-        this.slice(this.children).forEach(function (el) {
-          if (el.getAttribute('selected') !== 'true') {
-            el.setAttribute('selected', 'true')
-          } else {
-            el.removeAttribute('selected')
-          }
+        var me = this
+        this.slice(this.children).filter(function (el) {
+          console.log('Filtered?', me.isFiltered(el), el.textContent)
+          return !me.isFiltered(el)
+        }).forEach(function (el) {
+          me.toggleSelection(el)
+          me.last = el
         })
-      }
-    },
-
-    /**
-     * @method next
-     * Applies the same state to the next item in the list.
-     * For example, if the last action was to select an item,
-     * the next item on the list will be selected. If the last
-     * action was to deselect an item, the next item will be
-     * deselected. This only applies to items that are not filtered.
-     */
-    next: {
-      value: function () {
-        var next = this._lastSelection.nextSibling
-        while (next !== null && (next.nodeType === 3 || next.getAttribute('filter') === 'true')) {
-          next = next.nextSibling
-        }
-        if (next === null) {
-          return
-        }
-        if (this._lastSelection.getAttribute('selected') === 'true') {
-          next.setAttribute('selected', 'true')
-        } else {
-          next.removeAttribute('selected')
-        }
-        this._lastSelection = next
-      }
-    },
-
-    /**
-     * @method previous
-     * Applies the same state to the previous item in the list.
-     * For example, if the last action was to select an item,
-     * the previous item on the list will be selected. If the last
-     * action was to deselect an item, the previous item will be
-     * deselected. This only applies to items that are not filtered.
-     */
-    previous: {
-      value: function () {
-        var prev = this._lastSelection.previousSibling
-        while (prev !== null && (prev.nodeType === 3 || prev.getAttribute('filter') === 'true')) {
-          prev = prev.previousSibling
-        }
-        if (prev === null) {
-          return
-        }
-        if (this._lastSelection.getAttribute('selected') === 'true') {
-          prev.setAttribute('selected', 'true')
-        } else {
-          prev.removeAttribute('selected')
-        }
-        this._lastSelection = prev
       }
     },
 
@@ -326,19 +520,30 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     filter: {
       value: function (fn) {
-        var me = this
         if (!(typeof fn === 'function')) {
           console.warn('[ngn-list].filter(myFunction) method requires a function, but none was provided.')
           fn = function () { return false }
         }
+
+        var me = this
         this.slice(this.children).filter(fn).forEach(function (el) {
-          el.setAttribute('filter', 'true')
-          me.dispatchEvent(new CustomEvent('item.filter', {
-            detail: {
-              item: el
-            }
-          }))
+          me.filterItem(el)
         })
+
+        // Find the last selection (or set a sane one)
+        var old_last_selection = this.last
+        while (this.isFiltered(this.last)) {
+          this.last = this.previousItem(this.last)
+        }
+        if (this.last === null) {
+          this.last = old_last_selection
+          while (this.isFiltered(this.last)) {
+            this.last = this.nextItem(this.last)
+          }
+        }
+        if (this.last === null) {
+          this.last = this.querySelector(':not([filter="true"])')
+        }
       }
     },
 
@@ -352,22 +557,50 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function () {
         var me = this
         this.slice(this.children).forEach(function (el) {
-          el.removeAttribute('filter')
-          me.dispatchEvent(new CustomEvent('item.unfilter', {
-            detail: {
-              item: el
-            }
-          }))
+          me.unfilterItem(el)
         })
       }
     },
 
     /**
      * @method sort
+     * Sort the list using a method to determin the order.
+     * @param {function} sortBy (required)
+     * A method of sorting. This adheres to the `Array.prototype.sort`
+     * standard. For example:
      *
+     * ```js
+     * myList.sort(function(a, b) {
+     *   // The values are DOM elements, so it may be necessary to
+     *   // derive data.
+     *   a = a.textContent // Get the text between the tags
+     *   b = b.textContent
+     *
+     *   // If the values are equal, no change.
+     *   if (a === b) {
+     *   	 return 0
+     *   }
+     *
+     *   // If the first value is greater than the next, return
+     *   // a higher index for `a`. Otherwise return a lower index
+     *   // for `a`.
+     *   if (a > b) {
+     *     return 1
+     *   } else {
+     *     return -1
+     *   }
+     * })
+     * ```
      */
     sort: {
-      value: function (fn) {}
+      value: function (fn) {
+        fn = typeof fn === 'function' ? fn : function () {}
+        var newhtml = ''
+        this.slice(this.children).sort(fn).forEach(function (el) {
+          newhtml += el.outerHTML
+        })
+        this.innerHTML = newhtml
+      }
     }
   })
 })

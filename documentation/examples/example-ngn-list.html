@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <!-- <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
     <!-- <link rel="import" href="../../ngn-listitem.html"/> -->
     <!-- <script src="../../dist/ngn-listitem.min.js"></script> -->
     <script src="../../tags/ngn-list/tag.js"></script>
@@ -32,22 +32,23 @@
         flex-direction: column;
         align-content: stretch;
       }
-      section {
+      section, div, p {
         display: block;
         flex: 1 1 auto;
         border: 1px dashed rgba(0,0,0, .1);
         margin: 3px 0;
-        -webkit-user-select: none
+        -webkit-user-select: none;
+        -moz-user-select: none;
       }
-      section[selected="true"] {
+      [selected="true"] {
         background-color: #336699;
         color: #ffffff;
       }
-      section[filter="true"] {
+      [filter="true"] {
         position: relative;
         opacity: .2;
       }
-      section[filter="true"]:after {
+      [filter="true"]:after {
         position: absolute;
         top: 0;
         right: 0;
@@ -57,6 +58,34 @@
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+      p[selected="true"] {
+        position: relative;
+        background-color: green;
+      }
+      p[selected="true"]:after {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        content: 'Look at me, different highlighting for different tags!';
+        font-size: 70%;
+        color: #ffffff;
+      }
+      #log {
+        margin: 12px 0;
+        background-color: #313131;
+        color: #efefef;
+        padding: 12px;
+        font-size: smaller;
+        font-family: 'Monaco', 'Consolas', 'Open Sans', 'Arial';
+        border: 2px solid rgba(0,0,0,.8);
+        border-radius: 3px;
+      }
+      .focus {
+        border: 1px solid red;
       }
     </style>
   </head>
@@ -68,24 +97,29 @@
       <button>Invert Selection</button>
       <button>Apply Next</button>
       <button>Apply Previous</button>
+      <button>Sort By Letter (DESC)</button>
+      <button>Sort By Number (ASC)</button>
     </header>
     <ngn-list>
-      <section>A1</section>
-      <section>B2</section>
-      <section>C2</section>
-      <section>D3</section>
+      <section>A4</section>
+      <section>B4</section>
+      <section>C4</section>
+      <div>D4</div>
       <section>E3</section>
       <section>F3</section>
-      <section>G4</section>
-      <section>H4</section>
-      <section>I4</section>
-      <section>J4</section>
+      <p>G3</p>
+      <section>H2</section>
+      <section>I2</section>
+      <section>J1</section>
     </ngn-list>
+    <h3>Definitions</h3>
     <ol>
       <li>The filter applies to anything ending in "3".</li>
       <li>"Apply Next" will replicate the current item state (selected or not) to the next item.</li>
       <li>"Apply Previous" is the same as "Apply Next", but for the prior item.</li>
     </ol>
+    <h3>Activity Log:</h3>
+    <div id="log"></div>
     <script type="text/javascript">
       var list = document.querySelector('ngn-list')
 
@@ -102,6 +136,8 @@
       var invertSelectionButton  = document.querySelector('button:nth-of-type(4)')
       var applyNextButton  = document.querySelector('button:nth-of-type(5)')
       var applyPreviousButton  = document.querySelector('button:nth-of-type(6)')
+      var letterSortButton  = document.querySelector('button:nth-of-type(7)')
+      var numberSortButton  = document.querySelector('button:nth-of-type(8)')
 
       filterButton.addEventListener('click', function (e) {
         e.preventDefault()
@@ -140,6 +176,62 @@
       applyPreviousButton.addEventListener('click', function (e) {
         e.preventDefault()
         list.previous()
+      })
+
+      // Reverse alphabetically
+      letterSortButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        list.sort(function (a, b) {
+          var valA = a.textContent.substr(0, 1)
+          var valB = b.textContent.substr(0, 1)
+          if (valA === valB) {
+            return 0
+          }
+          if (valA < valB) {
+            return 1
+          }
+          return -1
+        })
+      })
+
+      // Reverse numerically
+      numberSortButton.addEventListener('click', function (e) {
+        e.preventDefault()
+        list.sort(function (a, b) {
+          var valA = parseInt(a.textContent.substr(1, 1), 10)
+          var valB = parseInt(b.textContent.substr(1, 1), 10)
+          if (valA === valB) {
+            return 0
+          }
+          if (valA > valB) {
+            return 1
+          }
+          return -1
+        })
+      })
+
+      list.addEventListener('item.select', function (e) {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<p>"' + e.detail.item.textContent + '" selected.</p>')
+      })
+
+      list.addEventListener('item.deselect', function (e) {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<p>"' + e.detail.item.textContent + '" selected.</p>')
+      })
+
+      list.addEventListener('item.filter', function (e) {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<p>"' + e.detail.item.textContent + '" filtered.</p>')
+      })
+
+      list.addEventListener('item.unfilter', function (e) {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<p>"' + e.detail.item.textContent + '" unfiltered.</p>')
+      })
+
+      list.addEventListener('item.create', function (e) {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<p>"' + e.detail.item.textContent + '" created.</p>')
+      })
+
+      list.addEventListener('item.delete', function (e) {
+        document.getElementById('log').insertAdjacentHTML('beforeend', '<p>"' + e.detail.item.textContent + '" deleted.</p>')
       })
 
       setTimeout(function () {
