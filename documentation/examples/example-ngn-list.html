@@ -95,10 +95,8 @@
       <button>Select All</button>
       <button>Clear Selected</button>
       <button>Invert Selection</button>
-      <button>Apply Next</button>
-      <button>Apply Previous</button>
       <button>Sort By Letter (DESC)</button>
-      <button>Sort By Number (ASC)</button>
+      <button>Sort By Number (DESC)</button>
     </header>
     <ngn-list>
       <section>A4</section>
@@ -134,10 +132,8 @@
       var selectAllButton  = document.querySelector('button:nth-of-type(2)')
       var clearSelectionButton  = document.querySelector('button:nth-of-type(3)')
       var invertSelectionButton  = document.querySelector('button:nth-of-type(4)')
-      var applyNextButton  = document.querySelector('button:nth-of-type(5)')
-      var applyPreviousButton  = document.querySelector('button:nth-of-type(6)')
-      var letterSortButton  = document.querySelector('button:nth-of-type(7)')
-      var numberSortButton  = document.querySelector('button:nth-of-type(8)')
+      var letterSortButton  = document.querySelector('button:nth-of-type(6)')
+      var numberSortButton  = document.querySelector('button:nth-of-type(6)')
 
       filterButton.addEventListener('click', function (e) {
         e.preventDefault()
@@ -168,16 +164,6 @@
         list.invertSelection()
       })
 
-      applyNextButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        list.next()
-      })
-
-      applyPreviousButton.addEventListener('click', function (e) {
-        e.preventDefault()
-        list.previous()
-      })
-
       // Reverse alphabetically
       letterSortButton.addEventListener('click', function (e) {
         e.preventDefault()
@@ -203,7 +189,7 @@
           if (valA === valB) {
             return 0
           }
-          if (valA > valB) {
+          if (valA < valB) {
             return 1
           }
           return -1
