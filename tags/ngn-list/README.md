@@ -10,6 +10,11 @@ but does not explicitly force a UI.
 - Filtering.
 - Sorting.
 - Events.
+- `ctrl+a` and `cmd+a` will select all.
+- `ctrl+click`, `cmd+click`, `alt+click` will toggle specific item selections without affecting any previously selected items.
+- `shift+click`: Select a range.
+- Arrow `shift+` `up`, `down`, `left`, or `right` to toggle selections sequentially.
+
 
 ### General Concepts
 
@@ -98,3 +103,16 @@ See the example, which contains CSS for styling based on filter and selection cr
 ```
 
 This example outputs a note to the console whenever a new item is added or removed.
+
+## Attributes
+
+Currently, there is only one recognized attribute, `rollover`.
+
+### rollover
+
+Setting `<ngn-list rollover="true">...</ngn-list>` will make arrow key functions
+automatically roll over. For example, if the last item on the list is currently
+selected and the user presses the next arrow (right or down), the selection
+process rolls over to the first element. Likewise, if the first list item is selected
+and the user presses the prior arrow (left or up), it will automatically select
+the last item in the list.
