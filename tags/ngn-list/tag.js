@@ -255,11 +255,13 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     toggleRangeSelection: {
       enumerable: true,
       value: function (from, to) {
+        this.identifyTrend(from, to)
         var start = from < to ? from : to
         var end = from > to ? from : to
         for (var i = start; i <= end; i++) {
           this.toggleSelection(this.children[i])
         }
+
       }
     },
 
@@ -273,6 +275,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     selectRange: {
       value: function (from, to) {
+        this.identifyTrend(from, to)
         var start = from < to ? from : to
         var end = from > to ? from : to
         for (var i = start; i <= end; i++) {
@@ -291,6 +294,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     unselectRange: {
       value: function (from, to) {
+        this.identifyTrend(from, to)
         var start = from < to ? from : to
         var end = from > to ? from : to
         for (var i = start; i <= end; i++) {
@@ -554,6 +558,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           // Shift
           if (e.keyCode === 16) {
             me.holdingShift = true
+          } else if (!me.holdingShift) {
             me.trending = 0
           }
         })
@@ -565,7 +570,6 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           } // Shift
           if (e.keyCode === 16) {
             me.holdingShift = false
-          // me.base = me.last
           }
         })
 
@@ -777,6 +781,19 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           me.toggleSelection(el)
           me.last = el
         })
+      }
+    },
+
+    identifyTrend: {
+      enumerable: false,
+      value: function (from, to) {
+        if (from < to) {
+          this.trending = 1
+        } else if (from > to) {
+          this.trending = -1
+        } else {
+          this.trending = 0
+        }
       }
     },
 
