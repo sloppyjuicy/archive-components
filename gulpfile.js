@@ -54,7 +54,7 @@ gulp.task('copy', function () {
     return fs.statSync(p).isDirectory()
       && fs.existsSync(path.join(p, 'tag.js'))
   })
-
+console.log(sources)
   sources.forEach(function (dir) {
     let str = fs.readFileSync(path.join(DIR.source, dir, 'tag.js')).toString()
 
