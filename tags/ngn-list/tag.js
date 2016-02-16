@@ -429,6 +429,22 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             this.trending = -1
           }
         }
+        if (this.trending !== 0) {
+          var me = this
+          // setTimeout(function () {
+            var s = me.getSelectedItems()
+            console.log(s);
+            console.log('First', s[0].textContent, "Last", s[s.length - 1].textContent);
+            if (s.length > 0) {
+              if (s[0] === me.base && me.trending > 0) {
+                me._lastSelection = s[s.length - 1]
+              } else if (s[s.length - 1] === me.base) {
+                me._lastSelection = s[0]
+              }
+            }
+          // })
+
+        }
       }
     },
 
@@ -475,6 +491,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             if (el !== null) {
               if (el === this.base) {
                 this.last = this.base
+                this._lastSelection = this.base
                 return
               }
 
@@ -483,12 +500,6 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
               } else {
                 this.toggleSelection(el)
                 this.last = el
-              }
-              var s = this.selectedItems
-              if (s[0] === this.base) {
-                this._lastSelection = s[s.length - 1]
-              } else if (s[s.length - 1] === this.base) {
-                this._lastSelection = s[0]
               }
             }
           } else if (!this.holdingShift) {
@@ -655,9 +666,14 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     getSelectedItems: {
       value: function (includeFiltered) {
-        return !(typeof includeFiltered === 'boolean' ? includeFiltered : false)
-          ? this.slice(this.querySelectorAll('[selected="true"]:not([filter="true"])'))
-          : this.slice(this.querySelectorAll('[selected="true"]'))
+        var me = this
+        includeFiltered = typeof includeFiltered === 'boolean' ? includeFiltered : false
+        return this.items.filter(function (el) {
+          if (!includeFiltered && me.isFiltered(el)) {
+            return false
+          }
+          return me.isSelected(el)
+        })
       }
     },
 
