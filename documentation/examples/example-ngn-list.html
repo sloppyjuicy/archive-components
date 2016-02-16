@@ -117,14 +117,6 @@
     <div id="log"></div>
     <script type="text/javascript">
       var list = document.querySelector('ngn-list')
-
-      list.addEventListener('item.create', function (e) {
-        console.info('Created', e.detail.item)
-      })
-      list.addEventListener('item.delete', function (e) {
-        console.warn('Deleted', e.detail.item)
-      })
-
       var filterButton = document.querySelector('button:first-of-type')
       var selectAllButton  = document.querySelector('button:nth-of-type(2)')
       var clearSelectionButton  = document.querySelector('button:nth-of-type(3)')
@@ -134,7 +126,6 @@
 
       filterButton.addEventListener('click', function (e) {
         e.preventDefault()
-        console.log(filterButton.innerHTML)
         if (filterButton.innerHTML !== 'Clear Filter') {
           list.filter(function (element, index, itemarray) {
             return element.textContent.substr(1, 1) === '3'
