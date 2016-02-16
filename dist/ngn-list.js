@@ -309,18 +309,20 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      * list. This ignores text nodes automatically.
      * @param {HTMLElement} item
      * The element to compare to.
-     * @param {boolean} [disableRolloverChange=true]
+     * @param {boolean} [allowRolloverChange=true]
      * Prevent the rollover change from registering (still happens, just not registered).
      * @return {HTMLElement}
      * @private
      */
     nextItem: {
       enumerable: false,
-      value: function (el, disableRolloverChange) {
+      value: function (el, allowRolloverChange) {
         if (el === this.children[this.children.length - 1]) {
           if (this.rollover) {
-            disableRolloverChange = typeof disableRolloverChange === 'boolean' ? disableRolloverChange : true
-            disableRolloverChange && (this.rolledover = !this.rolledover)
+            // allowRolloverChange = typeof allowRolloverChange === 'boolean' ? allowRolloverChange : true
+            // if (allowRolloverChange) {
+            //   this.rolledover = !this.rolledover
+            // }
             return this.children[0]
           } else {
             return null
@@ -350,8 +352,10 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function (el, disableRolloverChange) {
         if (el === this.children[0]) {
           if (this.rollover) {
-            disableRolloverChange = typeof disableRolloverChange === 'boolean' ? disableRolloverChange : true
-            disableRolloverChange && (this.rolledover = !this.rolledover)
+            // allowRolloverChange = typeof allowRolloverChange === 'boolean' ? allowRolloverChange : true
+            // if (allowRolloverChange) {
+            //   this.rolledover = !this.rolledover
+            // }
             return this.children[this.children.length - 1]
           } else {
             return null
@@ -449,39 +453,53 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     applyArrowHandler: {
       enumerable: false,
       value: function (e) {
-        if (e.keyCode >= 37 && e.keyCode <= 40 && this.holdingShift && this.last) {
-          var el = null
-          var trendReversal = false
+        if (e.keyCode >= 37 && e.keyCode <= 40) {
+          if (this.holdingShift && this.last) {
+            var el = null
+            var trendReversal = false
 
-          if (e.keyCode >= 39) {
-            el = this.nextItem(this.last)
-            trendReversal = this.trending < 0
-            this.trending = 1
-          } else {
-            el = this.previousItem(this.last)
-            trendReversal = this.trending > 0
-            this.trending = -1
-          }
-
-          if (this.rollover && this.rolledover) {
-            if ((this.trending < 0 && el === this.base) || (this.trending > 0 && el === this.base)) {
-              e.preventDefault()
-              return
-            }
-          }
-
-          if (el !== null) {
-            if (el === this.base) {
-              this.last = this.base
-              return
-            }
-
-            if (trendReversal) {
-              this.toggleSelection(this.last)
+            if (e.keyCode >= 39) {
+              el = this.nextItem(this.last)
+              trendReversal = this.trending < 0
+              this.trending = 1
             } else {
-              this.toggleSelection(el)
-              this.last = el
+              el = this.previousItem(this.last)
+              trendReversal = this.trending > 0
+              this.trending = -1
             }
+
+            if (this.rollover && this.rolledover) {
+              if ((this.trending < 0 && el === this.base) || (this.trending > 0 && el === this.base)) {
+                e.preventDefault()
+                return
+              }
+            }
+
+            if (el !== null) {
+              if (el === this.base) {
+                this.last = this.base
+                return
+              }
+
+              if (trendReversal) {
+                this.toggleSelection(this.last)
+              } else {
+                this.toggleSelection(el)
+                this.last = el
+              }
+            }
+          } else if (!this.holdingShift) {
+            var el
+            if (e.keyCode >= 39) {
+              el = this.nextItem(this.last)
+            } else {
+              el = this.previousItem(this.last)
+            }
+            this.clearSelected()
+            this.selectItem(el)
+            this.last = el
+            this.base = el
+            e.preventDefault()
           }
         }
       }
@@ -535,9 +553,11 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           },
           rolledover: {
             enumerable: false,
-            writable: true,
-            configurable: false,
-            value: false
+            get: function () {
+              var a = this.children[0]
+              var b = this.children[this.children.length - 1]
+              return this.isSelected(a) && this.isSelected(b)
+            }
           }
         })
 
@@ -760,6 +780,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             this.last = el
           }
         })
+      // this.rolledover = false
       }
     },
 
@@ -780,6 +801,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             break
           }
         }
+      // this.rolledover = false
       }
     },
 
@@ -798,6 +820,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           me.toggleSelection(el)
           me.last = el
         })
+      // this.rolledover = false
       }
     },
 
