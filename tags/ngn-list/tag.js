@@ -321,7 +321,6 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           if (this.rollover) {
             disableRolloverChange = typeof disableRolloverChange === 'boolean' ? disableRolloverChange : true
             disableRolloverChange && (this.rolledover = !this.rolledover)
-            console.info('Rolled over for next item')
             return this.children[0]
           } else {
             return null
@@ -353,7 +352,6 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           if (this.rollover) {
             disableRolloverChange = typeof disableRolloverChange === 'boolean' ? disableRolloverChange : true
             disableRolloverChange && (this.rolledover = !this.rolledover)
-            console.info('Rolled over on previous item')
             return this.children[this.children.length - 1]
           } else {
             return null
@@ -544,7 +542,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         })
 
         // Add support for CMD key on OSX
-        window.addEventListener('keydown', function (e) {
+        this.addEventListener('keydown', function (e) {
           // CMD on OSX
           if (e.keyCode === 91) {
             me.cmdKeyPressed = true
@@ -563,7 +561,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           }
         })
 
-        window.addEventListener('keyup', function (e) {
+        this.addEventListener('keyup', function (e) {
           // CMD on OSX
           if (e.keyCode === 91) {
             me.cmdKeyPressed = false
@@ -605,6 +603,11 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         observer.observe(this, {
           childList: true
         })
+
+        // Force focus/blur Capabilities
+        if (this.getAttribute('tabindex') === null) {
+          this.setAttribute('tabindex', 0)
+        }
       }
     },
 
@@ -668,6 +671,21 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       enumerable: true,
       get: function () {
         return this.getUnselectedItems(false)
+      }
+    },
+
+    /**
+     * @method unselectFilteredItems
+     * Forcibly unselect filtered items. This is useful
+     * when a filter is applied after a selection.
+     */
+    unselectFilteredItems: {
+      enumerable: true,
+      value: function () {
+        var me = this
+        this.filteredItems.forEach(function (el) {
+          me.unselectItem(el)
+        })
       }
     },
 
@@ -775,7 +793,6 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function () {
         var me = this
         this.items.filter(function (el) {
-          console.log('Filtered?', me.isFiltered(el), el.textContent)
           return !me.isFiltered(el)
         }).forEach(function (el) {
           me.toggleSelection(el)
@@ -806,6 +823,9 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      * `Array`. Each element is a list item. The index refers to
      * the item's position in the list (0-based, like an array), and
      * the array contains a reference to the entire list.
+     * @param {boolean} [deselectFiltered=true]
+     * By default, all filtered items are automatically unselected. To
+     * prevent this action, set this parameter to `false`.
      * @example
      * **Original HTML**
      * ```html
@@ -834,9 +854,14 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      * ```
      * @fires item.filter
      * Fired when an item matches the filter criteria.
+     * @fires filter.applied
+     * Fired after all items are filtered. This differs from `item.filter`,
+     * which is fired for each item that is filtered. This event is triggered
+     * after all items have been filtered.
      */
     filter: {
-      value: function (fn) {
+      value: function (fn, deselectFiltered) {
+        deselectFiltered = typeof deselectFiltered === 'boolean' ? deselectFiltered : true
         if (!(typeof fn === 'function')) {
           console.warn('[ngn-list].filter(myFunction) method requires a function, but none was provided.')
           fn = function () { return false }
@@ -863,6 +888,9 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             this.last = this.querySelector(':not([filter="true"])')
           }
         }
+
+        deselectFiltered && this.unselectFilteredItems()
+        this.dispatchEvent(new CustomEvent('filter.applied'))
       }
     },
 
@@ -871,6 +899,8 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      * Clear all filters.
      * @fires item.unfilter
      * Fired when a previously filtered item is no longer filtered.
+     * @fires filter.clear
+     * Fired when the operation completes.
      */
     clearFilter: {
       value: function () {
@@ -878,6 +908,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         this.items.forEach(function (el) {
           me.unfilterItem(el)
         })
+        this.dispatchEvent(new CustomEvent('filter.clear'))
       }
     },
 
@@ -910,6 +941,8 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      *   }
      * })
      * ```
+     * @fires sort
+     * Fired when the sort is complete.
      */
     sort: {
       value: function (fn) {
@@ -919,6 +952,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           newhtml += el.outerHTML
         })
         this.innerHTML = newhtml
+        this.dispatchEvent(new CustomEvent('sort'))
       }
     }
   })
