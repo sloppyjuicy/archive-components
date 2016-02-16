@@ -134,19 +134,9 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function (el) {
         if (el) {
           if (this.isSelected(el)) {
-            el.removeAttribute('selected')
-            this.dispatchEvent(new CustomEvent('item.unselect', {
-              detail: {
-                item: el
-              }
-            }))
+            this.unselectItem(el)
           } else {
-            el.setAttribute('selected', 'true')
-            this.dispatchEvent(new CustomEvent('item.select', {
-              detail: {
-                item: el
-              }
-            }))
+            this.selectItem(el)
           }
         }
       }
@@ -165,19 +155,9 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function (el) {
         if (el) {
           if (this.isFiltered(el)) {
-            el.removeAttribute('filter')
-            this.dispatchEvent(new CustomEvent('item.unfilter', {
-              detail: {
-                item: el
-              }
-            }))
+            this.unfilterItem(el)
           } else {
-            el.setAttribute('filter', 'true')
-            this.dispatchEvent(new CustomEvent('item.filter', {
-              detail: {
-                item: el
-              }
-            }))
+            this.filterItem(el)
           }
         }
       }
@@ -193,7 +173,12 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     filterItem: {
       value: function (el) {
         if (!this.isFiltered(el)) {
-          this.toggleFilter(el)
+          el.setAttribute('filter', 'true')
+          this.dispatchEvent(new CustomEvent('item.filter', {
+            detail: {
+              item: el
+            }
+          }))
         }
       }
     },
@@ -209,7 +194,12 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     unfilterItem: {
       value: function (el) {
         if (this.isFiltered(el)) {
-          this.toggleFilter(el)
+          el.removeAttribute('filter')
+          this.dispatchEvent(new CustomEvent('item.unfilter', {
+            detail: {
+              item: el
+            }
+          }))
         }
       }
     },
@@ -222,8 +212,14 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     selectItem: {
       value: function (el) {
+        this._lastSelection = el
         if (!this.isSelected(el)) {
-          this.toggleSelection(el)
+          el.setAttribute('selected', 'true')
+          this.dispatchEvent(new CustomEvent('item.select', {
+            detail: {
+              item: el
+            }
+          }))
         }
       }
     },
@@ -237,8 +233,20 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     unselectItem: {
       value: function (el) {
         if (this.isSelected(el)) {
-          this.toggleSelection(el)
+          el.removeAttribute('selected')
+          this.dispatchEvent(new CustomEvent('item.unselect', {
+            detail: {
+              item: el
+            }
+          }))
         }
+      }
+    },
+
+    lastSelection: {
+      enumerable: true,
+      get: function () {
+        return this._lastSelection
       }
     },
 
@@ -309,20 +317,14 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      * list. This ignores text nodes automatically.
      * @param {HTMLElement} item
      * The element to compare to.
-     * @param {boolean} [allowRolloverChange=true]
-     * Prevent the rollover change from registering (still happens, just not registered).
      * @return {HTMLElement}
      * @private
      */
     nextItem: {
       enumerable: false,
-      value: function (el, allowRolloverChange) {
+      value: function (el) {
         if (el === this.children[this.children.length - 1]) {
           if (this.rollover) {
-            // allowRolloverChange = typeof allowRolloverChange === 'boolean' ? allowRolloverChange : true
-            // if (allowRolloverChange) {
-            //   this.rolledover = !this.rolledover
-            // }
             return this.children[0]
           } else {
             return null
@@ -342,20 +344,14 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      * list. This ignores text nodes automatically.
      * @param {HTMLElement} item
      * The element to compare to.
-     * @param {boolean} [disableRolloverChange=true]
-     * Prevent the rollover change from registering (still happens, just not registered).
      * @return {HTMLElement}
      * @private
      */
     previousItem: {
       enumerable: false,
-      value: function (el, disableRolloverChange) {
+      value: function (el) {
         if (el === this.children[0]) {
           if (this.rollover) {
-            // allowRolloverChange = typeof allowRolloverChange === 'boolean' ? allowRolloverChange : true
-            // if (allowRolloverChange) {
-            //   this.rolledover = !this.rolledover
-            // }
             return this.children[this.children.length - 1]
           } else {
             return null
@@ -470,6 +466,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
 
             if (this.rollover && this.rolledover) {
               if ((this.trending < 0 && el === this.base) || (this.trending > 0 && el === this.base)) {
+                this._lastSelection = el
                 e.preventDefault()
                 return
               }
@@ -487,6 +484,12 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
                 this.toggleSelection(el)
                 this.last = el
               }
+              var s = this.selectedItems
+              if (s[0] === this.base) {
+                this._lastSelection = s[s.length - 1]
+              } else if (s[s.length - 1] === this.base) {
+                this._lastSelection = s[0]
+              }
             }
           } else if (!this.holdingShift) {
             var el
@@ -494,6 +497,9 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
               el = this.nextItem(this.last)
             } else {
               el = this.previousItem(this.last)
+            }
+            if (!this.rollover && el === null) {
+              return
             }
             this.clearSelected()
             this.selectItem(el)
@@ -550,6 +556,12 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             writable: true,
             configurable: false,
             value: 0
+          },
+          _lastSelection: {
+            enumerable: false,
+            writable: true,
+            configurable: false,
+            value: null
           },
           rolledover: {
             enumerable: false,
