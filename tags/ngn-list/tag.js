@@ -601,6 +601,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             if (mutation.type === 'childList') {
               if (mutation.addedNodes.length > 0) {
                 me.slice(mutation.addedNodes).forEach(function (el) {
+                  me.applyHandlers(el, me)
                   me.dispatchEvent(new CustomEvent('item.create', { // eslint-disable-line no-undef
                     detail: {
                       item: el
