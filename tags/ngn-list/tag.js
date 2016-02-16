@@ -22,6 +22,353 @@
  */
 var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-undef, no-unused-vars
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
+    // Initializes the web component.
+    createdCallback: {
+      value: function () {
+        var me = this
+
+        // Add support for CMD key on OSX
+        document.addEventListener('keydown', function (e) {
+          // CMD on OSX
+          if (e.keyCode === 91) {
+            me.cmdKeyPressed = true
+          }
+        })
+
+        document.addEventListener('keyup', function (e) {
+          // CMD on OSX
+          if (e.keyCode === 91) {
+            me.cmdKeyPressed = false
+          }
+        })
+
+        // Support other key actions
+        this.addEventListener('keydown', function (e) {
+          // Arrows
+          me.applyArrowHandler(e)
+
+          // Other key commands
+          me.applyKeyCommands(e)
+
+          // Shift
+          if (e.keyCode === 16) {
+            me.holdingShift = true
+          } else if (!me.holdingShift) {
+            me.trending = 0
+          }
+        })
+
+        this.addEventListener('keyup', function (e) {
+          // Shift
+          if (e.keyCode === 16) {
+            me.holdingShift = false
+          }
+        })
+
+        // Apply event handlers to top level elements in the list
+        this.items.forEach(function (el) {
+          me.applyHandlers(el, me)
+        })
+
+        var observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.type === 'childList') {
+              if (mutation.addedNodes.length > 0) {
+                me.slice(mutation.addedNodes).forEach(function (el) {
+                  me.applyHandlers(el, me)
+                  me.dispatchEvent(new CustomEvent('item.create', { // eslint-disable-line no-undef
+                    detail: {
+                      item: el
+                    }
+                  }))
+                })
+              } else if (mutation.removedNodes.length > 0) {
+                me.slice(mutation.removedNodes).forEach(function (el) {
+                  me.dispatchEvent(new CustomEvent('item.delete', { // eslint-disable-line no-undef
+                    detail: {
+                      item: el
+                    }
+                  }))
+                })
+              }
+            }
+          })
+        })
+
+        observer.observe(this, {
+          childList: true
+        })
+
+        // Force focus/blur Capabilities
+        if (this.getAttribute('tabindex') === null) {
+          this.setAttribute('tabindex', 0)
+        }
+      }
+    },
+
+    /**
+     * @method applyHandlers
+     * Applies event handlers a raw DOM element in the list.
+     * @param {HTMLElement} element
+     * The element that should be part of the list.
+     * @param {Object} [scope=this]
+     * The scope of the list.
+     * @private
+     */
+    applyHandlers: {
+      enumerable: false,
+      writable: false,
+      configurable: false,
+      value: function (el, scope) {
+        var me = scope || this
+
+        // Listen for click
+        el.addEventListener('click', function (e) {
+          // If no command buttons are pressed, clear everything except the clicked item.
+          if (!me.holdingShift && !e.ctrlKey && !me.cmdKeyPressed && !e.altKey) {
+            me.clearSelected()
+            me.toggleSelection(el)
+            me.base = el
+            me.last = el
+            this.trending = 0
+            return
+          }
+
+          if (e.ctrlKey || e.altKey || me.cmdKeyPressed) {
+            if (me.holdingShift) {
+              me.toggleSelection(me.last)
+              me.toggleRangeSelection(me.indexOfParent(me.last), me.indexOfParent(el))
+              me.base && me.toggleSelection(me.base)
+            } else {
+              me.toggleSelection(el)
+            }
+            me.last = el
+            return
+          }
+
+          // If the shift button is pressed, selections should accrue.
+          if (me.holdingShift) {
+            me.base = me.base || me.last || el
+            !(e.ctrlKey || e.altKey || me.cmdKeyPressed) && me.clearSelected()
+            me.toggleRangeSelection(me.indexOfParent(me.base), me.indexOfParent(el))
+          }
+          me.last = el
+        })
+      }
+    },
+
+    /**
+     * @method applyArrowHandler
+     * A helper method to apply key/arrow event handlers to an event.
+     * @param {Event} event
+     * The event to augment.
+     * @private
+     */
+    applyArrowHandler: {
+      enumerable: false,
+      value: function (e) {
+        // An arrow key was pressed
+        if (e.keyCode >= 37 && e.keyCode <= 40) {
+          // User is holding shift key and there is an original element selected.
+          if (this.holdingShift && this.last) {
+            var el = null
+            var trendReversal = false
+
+            if (e.keyCode >= 39) {
+              // Down or Right
+              el = this.nextItem(this.last)
+              trendReversal = this.trending < 0
+              this.trending = 1
+            } else {
+              // Up or Left
+              el = this.previousItem(this.last)
+              trendReversal = this.trending > 0
+              this.trending = -1
+            }
+
+            // If rollover is active and the selection range has crossed
+            // the threshold, check to make sure it's not restarting (cycling
+            // over itself again)
+            if (this.rollover && this.rolledover) {
+              if ((this.trending < 0 && el === this.base) || (this.trending > 0 && el === this.base)) {
+                e.preventDefault()
+                return
+              }
+            }
+
+            if (el !== null) {
+              if (el === this.base) {
+                this.last = this.base
+                return
+              }
+
+              if (trendReversal) {
+                this.toggleSelection(this.last)
+              } else {
+                // this.matchSelectionState(this.base, el)
+                this.toggleSelection(el)
+                this.last = el
+              }
+            }
+
+          } else if (!this.holdingShift) {
+            var el
+            if (e.keyCode >= 39) {
+              el = this.nextItem(this.last)
+            } else {
+              el = this.previousItem(this.last)
+            }
+            if (!this.rollover && el === null) {
+              return
+            }
+            this.clearSelected()
+            this.selectItem(el)
+            this.last = el
+            this.base = el
+            e.preventDefault()
+          }
+        }
+      }
+    },
+
+    applyKeyCommands: {
+      enumerable: false,
+      value: function (e) {
+        if (e.keyCode === 65 && (e.ctrlKey || this.cmdKeyPressed)) {
+          e.preventDefault()
+          this.selectAll()
+        }
+      }
+    },
+
+    /**
+     * @property {boolean} cmdKeyPressed
+     * Indicates the CMD key is pressed  (OSX Only)
+     * @private
+     */
+    cmdKeyPressed: {
+      enumerable: false,
+      writable: true,
+      configurable: false,
+      value: false
+    },
+
+    /**
+     * @property {boolean} holdingShift
+     * Indicates the user is pressing/holding the shift key.
+     * @private
+     */
+    holdingShift: {
+      enumerable: false,
+      writable: true,
+      configurable: false,
+      value: false
+    },
+
+    /**
+     * @property {HTMLElement} base
+     * The origin/base/first element in a multi-selection range.
+     * @private
+     */
+    base: {
+      enumerable: false,
+      writable: true,
+      configurable: false,
+      value: null
+    },
+
+    // Holds the last element
+    _last: {
+      enumerable: false,
+      writable: true,
+      configurable: false,
+      value: null
+    },
+
+    /**
+     * @property {number} trending
+     * An indicator of the current sequential trend in a multi-selection.
+     *
+     * **From the #base element:**
+     *
+     * - A value of `1` indicates multi-selection is occurring sequentially in a
+     * forward fashion.
+     * - A value of `-1` indicates selection is occurring
+     * sequentially in a reverse fashion.
+     * - A value of `0` indicates no trend.
+     * @private
+     */
+    trending: {
+      enumerable: false,
+      writable: true,
+      configurable: false,
+      value: 0
+    },
+
+    /**
+     * @property {HTMLElement} last
+     * The last element upon which an action happened (selection/filter/etc).
+     * @private
+     */
+    last: {
+      enumerable: false,
+      get: function () {
+        return this._last
+      },
+      set: function (el) {
+        this._last = el
+        if (this.base && this.holdingShift && this.trending === 0) {
+          if (this.indexOfParent(this.last) > this.indexOfParent(this.base)) {
+            this.trending = 1
+          } else if (this.indexOfParent(this.last) < this.indexOfParent(this.base)) {
+            this.trending = -1
+          }
+        }
+      }
+    },
+
+    /**
+     * @property {HTMLElement} lastSelected
+     * The last item selected by the user. In a multi-selection,
+     * this returns only the very last selected item.
+     */
+    lastSelected: {
+      enumerable: true,
+      get: function () {
+        var s = this.selectedItems
+        if (s.length === 0) {
+          return null
+        }
+        return s[s.length - 1]
+      }
+    },
+
+    /**
+     * @accessor {boolean} rollover
+     * Indicates rollover is active.
+     * @private
+     */
+    rollover: {
+      enumerable: false,
+      get: function () {
+        return this.getAttribute('rollover') === 'true'
+      }
+    },
+
+    /**
+     * @accessor {boolean} rolledover
+     * Indicates a rollover occurred.
+     * @private
+     */
+    rolledover: {
+      enumerable: false,
+      get: function () {
+        var a = this.children[0]
+        var b = this.children[this.children.length - 1]
+        return this.selected(a) && this.selected(b)
+      }
+    },
+
     /**
      * @method slice
      * Emulates Array.prototype.slice.
@@ -86,14 +433,14 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     },
 
     /**
-     * @method isSelected
+     * @method selected
      * Indicates whether the specified item is selected or not.
      * @param {HTMLElement} item
      * The element.
      * @return {boolean}
      * @private
      */
-    isSelected: {
+    selected: {
       enumerable: false,
       value: function (el) {
         if (!el) {
@@ -104,14 +451,14 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     },
 
     /**
-     * @method isFiltered
+     * @method filtered
      * Indicates whether the specified item is filtered or not.
      * @param {HTMLElement} item
      * The element.
      * @return {boolean}
      * @private
      */
-    isFiltered: {
+    filtered: {
       enumerable: false,
       value: function (el) {
         if (!el) {
@@ -133,7 +480,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       enumerable: false,
       value: function (el) {
         if (el) {
-          if (this.isSelected(el)) {
+          if (this.selected(el)) {
             this.unselectItem(el)
           } else {
             this.selectItem(el)
@@ -154,7 +501,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       enumerable: false,
       value: function (el) {
         if (el) {
-          if (this.isFiltered(el)) {
+          if (this.filtered(el)) {
             this.unfilterItem(el)
           } else {
             this.filterItem(el)
@@ -172,7 +519,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     filterItem: {
       value: function (el) {
-        if (!this.isFiltered(el)) {
+        if (!this.filtered(el)) {
           el.setAttribute('filter', 'true')
           this.dispatchEvent(new CustomEvent('item.filter', {
             detail: {
@@ -193,7 +540,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     unfilterItem: {
       value: function (el) {
-        if (this.isFiltered(el)) {
+        if (this.filtered(el)) {
           el.removeAttribute('filter')
           this.dispatchEvent(new CustomEvent('item.unfilter', {
             detail: {
@@ -212,8 +559,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     selectItem: {
       value: function (el) {
-        this._lastSelection = el
-        if (!this.isSelected(el)) {
+        if (!this.selected(el)) {
           el.setAttribute('selected', 'true')
           this.dispatchEvent(new CustomEvent('item.select', {
             detail: {
@@ -232,7 +578,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     unselectItem: {
       value: function (el) {
-        if (this.isSelected(el)) {
+        if (this.selected(el)) {
           el.removeAttribute('selected')
           this.dispatchEvent(new CustomEvent('item.unselect', {
             detail: {
@@ -240,13 +586,6 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
             }
           }))
         }
-      }
-    },
-
-    lastSelection: {
-      enumerable: true,
-      get: function () {
-        return this._lastSelection
       }
     },
 
@@ -263,13 +602,18 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
     toggleRangeSelection: {
       enumerable: true,
       value: function (from, to) {
-        this.identifyTrend(from, to)
+        this.trending = this.identifyTrend(from, to)
         var start = from < to ? from : to
         var end = from > to ? from : to
-        for (var i = start; i <= end; i++) {
-          this.toggleSelection(this.children[i])
+        if (from > to) {
+          for (var i = end; i >= start; i--) {
+            this.toggleSelection(this.children[i])
+          }
+        } else {
+          for (var i = start; i <= end; i++) {
+            this.toggleSelection(this.children[i])
+          }
         }
-
       }
     },
 
@@ -283,11 +627,17 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     selectRange: {
       value: function (from, to) {
-        this.identifyTrend(from, to)
+        this.trending = this.identifyTrend(from, to)
         var start = from < to ? from : to
         var end = from > to ? from : to
-        for (var i = start; i <= end; i++) {
-          this.selectItem(this.children[i])
+        if (from > to) {
+          for (var i = end; i >= start; i--) {
+            this.selectItem(this.children[i])
+          }
+        } else {
+          for (var i = start; i <= end; i++) {
+            this.selectItem(this.children[i])
+          }
         }
       }
     },
@@ -302,11 +652,17 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      */
     unselectRange: {
       value: function (from, to) {
-        this.identifyTrend(from, to)
+        this.trending = this.identifyTrend(from, to)
         var start = from < to ? from : to
         var end = from > to ? from : to
-        for (var i = start; i <= end; i++) {
-          this.unselectItem(this.children[i])
+        if (from > to) {
+          for (var i = end; i >= start; i--) {
+            this.unselectItem(this.children[i])
+          }
+        } else {
+          for (var i = start; i <= end; i++) {
+            this.unselectItem(this.children[i])
+          }
         }
       }
     },
@@ -331,7 +687,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           }
         }
         var next = el.nextSibling
-        while (next !== null && (next.nodeType === 3 || this.isFiltered(next))) {
+        while (next !== null && (next.nodeType === 3 || this.filtered(next))) {
           next = next.nextSibling
         }
         return next
@@ -358,300 +714,10 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           }
         }
         var prev = el.previousSibling
-        while (prev !== null && (prev.nodeType === 3 || this.isFiltered(prev))) {
+        while (prev !== null && (prev.nodeType === 3 || this.filtered(prev))) {
           prev = prev.previousSibling
         }
         return prev
-      }
-    },
-
-    /**
-     * @method applyHandlers
-     * Applies event handlers a raw DOM element in the list.
-     * @param {HTMLElement} element
-     * The element that should be part of the list.
-     * @param {Object} [scope=this]
-     * The scope of the list.
-     * @private
-     */
-    applyHandlers: {
-      enumerable: false,
-      writable: false,
-      configurable: false,
-      value: function (el, scope) {
-        var me = scope || this
-
-        // Listen for click
-        el.addEventListener('click', function (e) {
-          // If no command buttons are pressed, clear everything except the clicked item.
-          if (!me.holdingShift && !e.ctrlKey && !me.cmdKeyPressed && !e.altKey) {
-            me.clearSelected()
-            me.toggleSelection(el)
-            me.base = el
-            me.last = el
-            return
-          }
-
-          if (e.ctrlKey || e.altKey || me.cmdKeyPressed) {
-            if (me.holdingShift) {
-              me.toggleSelection(me.last)
-              me.toggleRangeSelection(me.indexOfParent(me.last), me.indexOfParent(el))
-              me.base && me.toggleSelection(me.base)
-            } else {
-              me.toggleSelection(el)
-            }
-            me.last = el
-            return
-          }
-
-          // If the shift button is pressed, selections should accrue.
-          if (me.holdingShift) {
-            me.base = me.base || me.last || el
-            !(e.ctrlKey || e.altKey || me.cmdKeyPressed) && me.clearSelected()
-            me.toggleRangeSelection(me.indexOfParent(me.base), me.indexOfParent(el))
-          }
-          me.last = el
-        })
-      }
-    },
-
-    last: {
-      enumerable: false,
-      get: function () {
-        return this._last
-      },
-      set: function (el) {
-        this._last = el
-        if (this.base && this.holdingShift && this.trending === 0) {
-          if (this.indexOfParent(this.last) > this.indexOfParent(this.base)) {
-            this.trending = 1
-          } else if (this.indexOfParent(this.last) < this.indexOfParent(this.base)) {
-            this.trending = -1
-          }
-        }
-        if (this.trending !== 0) {
-          var me = this
-          // setTimeout(function () {
-            var s = me.getSelectedItems()
-            console.log(s);
-            console.log('First', s[0].textContent, "Last", s[s.length - 1].textContent);
-            if (s.length > 0) {
-              if (s[0] === me.base && me.trending > 0) {
-                me._lastSelection = s[s.length - 1]
-              } else if (s[s.length - 1] === me.base) {
-                me._lastSelection = s[0]
-              }
-            }
-          // })
-
-        }
-      }
-    },
-
-    rollover: {
-      enumerable: false,
-      get: function () {
-        return this.getAttribute('rollover') === 'true'
-      }
-    },
-
-    /**
-     * @method applyArrowHandler
-     * A helper method to apply key/arrow event handlers to an event.
-     * @param {Event} event
-     * The event to augment.
-     * @private
-     */
-    applyArrowHandler: {
-      enumerable: false,
-      value: function (e) {
-        if (e.keyCode >= 37 && e.keyCode <= 40) {
-          if (this.holdingShift && this.last) {
-            var el = null
-            var trendReversal = false
-
-            if (e.keyCode >= 39) {
-              el = this.nextItem(this.last)
-              trendReversal = this.trending < 0
-              this.trending = 1
-            } else {
-              el = this.previousItem(this.last)
-              trendReversal = this.trending > 0
-              this.trending = -1
-            }
-
-            if (this.rollover && this.rolledover) {
-              if ((this.trending < 0 && el === this.base) || (this.trending > 0 && el === this.base)) {
-                this._lastSelection = el
-                e.preventDefault()
-                return
-              }
-            }
-
-            if (el !== null) {
-              if (el === this.base) {
-                this.last = this.base
-                this._lastSelection = this.base
-                return
-              }
-
-              if (trendReversal) {
-                this.toggleSelection(this.last)
-              } else {
-                this.toggleSelection(el)
-                this.last = el
-              }
-            }
-          } else if (!this.holdingShift) {
-            var el
-            if (e.keyCode >= 39) {
-              el = this.nextItem(this.last)
-            } else {
-              el = this.previousItem(this.last)
-            }
-            if (!this.rollover && el === null) {
-              return
-            }
-            this.clearSelected()
-            this.selectItem(el)
-            this.last = el
-            this.base = el
-            e.preventDefault()
-          }
-        }
-      }
-    },
-
-    applyKeyCommands: {
-      enumerable: false,
-      value: function (e) {
-        if (e.keyCode === 65 && (e.ctrlKey || this.cmdKeyPressed)) {
-          e.preventDefault()
-          this.selectAll()
-        }
-      }
-    },
-
-    // Initializes the web component.
-    createdCallback: {
-      value: function () {
-        var me = this
-
-        Object.defineProperties(this, {
-          cmdKeyPressed: {
-            enumerable: false,
-            writable: true,
-            configurable: false,
-            value: false
-          },
-          holdingShift: {
-            enumerable: false,
-            writable: true,
-            configurable: false,
-            value: false
-          },
-          base: {
-            enumerable: false,
-            writable: true,
-            configurable: false,
-            value: null
-          },
-          _last: {
-            enumerable: false,
-            writable: true,
-            configurable: false,
-            value: null
-          },
-          trending: {
-            enumerable: false,
-            writable: true,
-            configurable: false,
-            value: 0
-          },
-          _lastSelection: {
-            enumerable: false,
-            writable: true,
-            configurable: false,
-            value: null
-          },
-          rolledover: {
-            enumerable: false,
-            get: function () {
-              var a = this.children[0]
-              var b = this.children[this.children.length - 1]
-              return this.isSelected(a) && this.isSelected(b)
-            }
-          }
-        })
-
-        // Add support for CMD key on OSX
-        this.addEventListener('keydown', function (e) {
-          // CMD on OSX
-          if (e.keyCode === 91) {
-            me.cmdKeyPressed = true
-          }
-          // Arrows
-          me.applyArrowHandler(e)
-
-          // Other key commands
-          me.applyKeyCommands(e)
-
-          // Shift
-          if (e.keyCode === 16) {
-            me.holdingShift = true
-          } else if (!me.holdingShift) {
-            me.trending = 0
-          }
-        })
-
-        this.addEventListener('keyup', function (e) {
-          // CMD on OSX
-          if (e.keyCode === 91) {
-            me.cmdKeyPressed = false
-          } // Shift
-          if (e.keyCode === 16) {
-            me.holdingShift = false
-          }
-        })
-
-        // Apply event handlers to top level elements in the list
-        this.items.forEach(function (el) {
-          me.applyHandlers(el, me)
-        })
-
-        var observer = new MutationObserver(function (mutations) {
-          mutations.forEach(function (mutation) {
-            if (mutation.type === 'childList') {
-              if (mutation.addedNodes.length > 0) {
-                me.slice(mutation.addedNodes).forEach(function (el) {
-                  me.applyHandlers(el, me)
-                  me.dispatchEvent(new CustomEvent('item.create', { // eslint-disable-line no-undef
-                    detail: {
-                      item: el
-                    }
-                  }))
-                })
-              } else if (mutation.removedNodes.length > 0) {
-                me.slice(mutation.removedNodes).forEach(function (el) {
-                  me.dispatchEvent(new CustomEvent('item.delete', { // eslint-disable-line no-undef
-                    detail: {
-                      item: el
-                    }
-                  }))
-                })
-              }
-            }
-          })
-        })
-
-        observer.observe(this, {
-          childList: true
-        })
-
-        // Force focus/blur Capabilities
-        if (this.getAttribute('tabindex') === null) {
-          this.setAttribute('tabindex', 0)
-        }
       }
     },
 
@@ -668,12 +734,15 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function (includeFiltered) {
         var me = this
         includeFiltered = typeof includeFiltered === 'boolean' ? includeFiltered : false
-        return this.items.filter(function (el) {
-          if (!includeFiltered && me.isFiltered(el)) {
-            return false
+        var selItems = this.items.filter(function (el) {
+          if (!includeFiltered) {
+            if (me.filtered(el)) {
+              return false
+            }
           }
-          return me.isSelected(el)
+          return me.selected(el)
         })
+        return this.identifyTrend(this.base, this.last) < 0 ? selItems.reverse() : selItems
       }
     },
 
@@ -691,11 +760,11 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         var me = this
         if (!(typeof includeFiltered === 'boolean' ? includeFiltered : false)) {
           return this.items.filter(function (el) {
-            return !me.isSelected(el)
+            return !me.selected(el)
           })
         }
         return this.items.filter(function (el) {
-          return !me.isSelected(el) && !me.isFiltered(el)
+          return !me.selected(el) && !me.filtered(el)
         })
       }
     },
@@ -748,7 +817,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function () {
         var me = this
         return this.items.filter(function (el) {
-          return me.isFiltered(el)
+          return me.filtered(el)
         })
       }
     },
@@ -763,7 +832,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function () {
         var me = this
         return this.items.filter(function (el) {
-          return !me.isFiltered(el)
+          return !me.filtered(el)
         })
       }
     },
@@ -804,12 +873,36 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         var me = this
         this.items.forEach(function (el) {
           // console.log('force', !force, 'filtered', el.getAttribute('filtered') === null)
-          if (force || !me.isFiltered(el)) {
+          if (force || !me.filtered(el)) {
             me.selectItem(el)
             this.last = el
           }
         })
-      // this.rolledover = false
+      }
+    },
+
+    /**
+     * @method matchSelectionState
+     * Match the selection state of two items, i.e. if the first item is
+     * selected, select the next one. If the first item is unselected,
+     * unselect the second.
+     * @param {HTMLElement} origin
+     * The base element.
+     * @param {HTMLElement} target
+     * The target element.
+     * @private
+     */
+    matchSelectionState: {
+      enumerable: false,
+      value: function (origin, target) {
+        var o = this.selected(origin)
+        if (o !== this.selected(target)) {
+          if (o) {
+            this.selectItem(target)
+          } else {
+            this.unselectItem(target)
+          }
+        }
       }
     },
 
@@ -825,12 +918,11 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           me.unselectItem(el)
         })
         for (var i = 0; i < this.children.length; i++) {
-          if (!this.isFiltered(this.children[i])) {
+          if (!this.filtered(this.children[i])) {
             this.last = this.children[i]
             break
           }
         }
-      // this.rolledover = false
       }
     },
 
@@ -844,7 +936,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function () {
         var me = this
         this.items.filter(function (el) {
-          return !me.isFiltered(el)
+          return !me.filtered(el)
         }).forEach(function (el) {
           me.toggleSelection(el)
           me.last = el
@@ -853,15 +945,30 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       }
     },
 
+    /**
+     * @method identifyTrend
+     * Identify a trend (see #trending) in sequential multi-selection.
+     * @return {Number}
+     * - `1` indicates a forward progression of multi-selection.
+     * - `-1` indicates a reverse progression of multi-selection.
+     * - `0` indicates no progression of multi-selection
+     * @private
+     */
     identifyTrend: {
       enumerable: false,
       value: function (from, to) {
+        if (typeof from !== 'number') {
+          from = this.indexOfParent(from)
+        }
+        if (typeof to !== 'number') {
+          to = this.indexOfParent(to)
+        }
         if (from < to) {
-          this.trending = 1
+          return 1
         } else if (from > to) {
-          this.trending = -1
+          return -1
         } else {
-          this.trending = 0
+          return 0
         }
       }
     },
@@ -927,12 +1034,12 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         if (this.last) {
           // Find the last selection (or set a sane one)
           var old_last_selection = this.last
-          while (this.isFiltered(this.last)) {
+          while (this.filtered(this.last)) {
             this.last = this.previousItem(this.last)
           }
           if (this.last === null) {
             this.last = old_last_selection
-            while (this.isFiltered(this.last)) {
+            while (this.filtered(this.last)) {
               this.last = this.nextItem(this.last)
             }
           }
