@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <!-- <link rel="import" href="../../ngn-overlay.html"/> -->
+    <!-- <script src="../../dist/ngn-overlay.min.js"></script> -->
+    <script src="../../tags/ngn-overlay/tag.js"></script>
+    <style>
+      body, html {
+        padding: 0;
+        margin: 0;
+      }
+
+      .chassis ngn-overlay {
+        /*background-color: rgba(0,0,0,.5);*/
+        border: 10px solid pink;
+        align-items: flex-end;
+      }
+
+      .chassis ngn-overlay div {
+        background-color: #336699;
+        width: 50vw;
+        height: 30vh;
+        padding: 5vh 5vw;
+        border-radius: 3px;
+        border: 1px solid #cccccc;
+      }
+
+      section {
+        position: absolute;
+        top: 65px;
+        left: 65px;
+        bottom: 65px;
+        right: 65px;
+        border: 5px solid #333333;
+        padding: 35px;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      yo
+      <ngn-overlay>
+        <div>Anything can go here!</div>
+      </ngn-overlay>
+    </section>
+  </body>
+</html>

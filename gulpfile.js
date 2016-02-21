@@ -81,14 +81,15 @@ gulp.task('copy', function () {
       tpl = fs.readFileSync(tplfile).toString()
       tpl = tpl.replace(/\n|\s+/g, ' ').replace(/\s\s/g, ' ')
       tpl = '{\n'
-        + '\tvar content = \'' + tpl + '\'.replace(\/<(\\/?)template(.*?)>\/gi,\'\')\n'
-        + '\tvar shadow = this.createShadowRoot()\n'
-        + '\tvar ph = document.createElement(\'p\')\n'
-        + '\tph.insertAdjacentHTML(\'afterbegin\', content)\n'
-        + '\tArray.prototype.slice.call(ph.children).forEach(function (el) {\n'
-        + '\t\tshadow.appendChild(document.importNode(el, true))\n'
-        + '\t})\n'
-        + '\tdelete ph\n}\n'
+        + '\t\t\t\tdocument.body.classList.add(\'chassis\')\n'
+        + '\t\t\t\tvar content = \'' + tpl + '\'.replace(\/<(\\/?)template(.*?)>\/gi,\'\')\n'
+        + '\t\t\t\tvar shadow = this.createShadowRoot()\n'
+        + '\t\t\t\tvar ph = document.createElement(\'p\')\n'
+        + '\t\t\t\tph.insertAdjacentHTML(\'afterbegin\', content)\n'
+        + '\t\t\t\tArray.prototype.slice.call(ph.children).forEach(function (el) {\n'
+        + '\t\t\t\t\tshadow.appendChild(document.importNode(el, true))\n'
+        + '\t\t\t\t})\n'
+        + '\t\t\t\tdelete ph\n}\n'
     }
     if (tpl) {
       str = str.replace(str.substr(initTplRange[0], initTplRange[1] - initTplRange[0]), tpl)

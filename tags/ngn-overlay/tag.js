@@ -1,10 +1,9 @@
-var {{TagVariableName}} = document.registerElement('{{TagName}}', { // eslint-disable-line, no-undef
+var NgnOverlay = document.registerElement('ngn-overlay', { // eslint-disable-line, no-undef
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
-
     initTpl: {
       enumerable: false,
       value: function () {
-        var tag = '{{TagName}}'
+        var tag = 'ngn-overlay'
         var src = document.querySelector('script[src*="' + tag + '"]') || document.querySelector('link[href*="' + tag + '.html"]')
 
         document.body.classList.add('chassis')

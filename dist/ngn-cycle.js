@@ -3,14 +3,15 @@ var NgnCycle = document.registerElement('ngn-cycle', { // eslint-disable-line no
     initTpl: {
       enumerable: false,
       value: function () {
-	var content = '<template> <style> @charset "UTF-8"; div { display: flex; flex: 1 1 auto; } div > * { display: none; flex: 1 1 auto; } ::content > * { display: none; flex: 1 1 auto; } div > .active { display: flex; } ::content > .active { display: flex; } </style> <div id="host"> <content></content> </div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
-	var shadow = this.createShadowRoot()
-	var ph = document.createElement('p')
-	ph.insertAdjacentHTML('afterbegin', content)
-	Array.prototype.slice.call(ph.children).forEach(function (el) {
-		shadow.appendChild(document.importNode(el, true))
-	})
-	delete ph
+				document.body.classList.add('chassis')
+				var content = '<template> <style> @charset "UTF-8"; div { display: flex; flex: 1 1 auto; } div > * { display: none; flex: 1 1 auto; } ::content > * { display: none; flex: 1 1 auto; } div > .active { display: flex; } ::content > .active { display: flex; } </style> <div id="host"> <content></content> </div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
+				var shadow = this.createShadowRoot()
+				var ph = document.createElement('p')
+				ph.insertAdjacentHTML('afterbegin', content)
+				Array.prototype.slice.call(ph.children).forEach(function (el) {
+					shadow.appendChild(document.importNode(el, true))
+				})
+				delete ph
 }
 
     },

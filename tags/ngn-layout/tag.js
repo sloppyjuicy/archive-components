@@ -5,6 +5,9 @@ var NgnLayout = document.registerElement('ngn-layout', {
       value: function () {
         var tag = 'ngn-layout'
         var src = document.querySelector('script[src*="' + tag + '"]') || document.querySelector('link[href*="' + tag + '.html"]')
+
+        document.body.classList.add('chassis')
+
         if (src) {
           src = (src.hasAttribute('src') ? src.getAttribute('src') : src.getAttribute('href')).replace(/\\/g, '/')
           src = src.split('/')

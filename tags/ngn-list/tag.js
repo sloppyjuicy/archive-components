@@ -27,6 +27,8 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function () {
         var me = this
 
+        document.body.classList.add('chassis')
+
         // Add support for CMD key on OSX
         document.addEventListener('keydown', function (e) {
           // CMD on OSX
@@ -125,7 +127,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         // Listen for click
         el.addEventListener('click', function (e) {
           // If no command buttons are pressed, clear everything except the clicked item.
-          if (!me.holdingShift && !e.ctrlKey && !me.cmdKeyPressed && !e.altKey) {
+          if (!me.allowMultiSelection || (!me.holdingShift && !e.ctrlKey && !me.cmdKeyPressed && !e.altKey)) {
             me.clearSelected()
             me.toggleSelection(el)
             me.base = el
@@ -170,7 +172,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
         // An arrow key was pressed
         if (e.keyCode >= 37 && e.keyCode <= 40) {
           // User is holding shift key and there is an original element selected.
-          if (this.holdingShift && this.last) {
+          if (this.holdingShift && this.last && this.allowMultiSelection) {
             var el = null
             var trendReversal = false
 
@@ -210,8 +212,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
                 this.last = el
               }
             }
-
-          } else if (!this.holdingShift) {
+          } else if (!this.holdingShift || !this.allowMultiSelection) {
             var el
             if (e.keyCode >= 39) {
               el = this.nextItem(this.last)
@@ -340,6 +341,18 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
           return null
         }
         return s[s.length - 1]
+      }
+    },
+
+    /**
+     * @property {boolean} allowMultiSelection
+     * Indicates whether multi-selection is enabled or not.
+     * @private
+     */
+    allowMultiSelection: {
+      enumerable: false,
+      get: function () {
+        return this.getAttribute('multiselect') !== 'false'
       }
     },
 
