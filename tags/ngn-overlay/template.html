@@ -13,6 +13,8 @@
       padding: 0;
       align-items: center;
       justify-content: center;
+      opacity: 0;
+      pointer-events: none;
     }
     ngn-overlay {
       background: rgba(0,0,0,.6);
@@ -26,6 +28,16 @@
       padding: 0;
       align-items: center;
       justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+    }
+    :host([active="true"]) {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    ngn-overlay[active="true"] {
+      opacity: 1;
+      pointer-events: auto;
     }
   </style>
   <!-- <ngncontent id="host" class="active"> -->

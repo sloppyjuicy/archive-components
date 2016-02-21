@@ -10,18 +10,41 @@
     <script src="../../tags/ngn-overlay/tag.js"></script>
     <style>
       body, html {
-        padding: 0;
+        padding: 2vh 2vw;
         margin: 0;
+        font-family: 'Source Sans Pro', Arial;
       }
 
+      header {
+        background: #313131;
+        border-radius: 3px;
+        padding: .2vh;
+      }
+
+      header button {
+        background: #336699;
+        border: 1px solid rgba(0,0,0,.3);
+        color: #ffffff;
+        border-radius: 3px;
+        padding: 3px;
+        margin: 3px;
+        cursor: pointer;
+      }
+
+      // Notice the scope of ".chassis", which prevents scope conflicts
       .chassis ngn-overlay {
-        /*background-color: rgba(0,0,0,.5);*/
-        border: 10px solid pink;
-        align-items: flex-end;
+        background-color: rgba(0,0,0,.5);
+      }
+
+      .chassis ngn-overlay:last-of-type {
+        background-color: rgba(30,0,0,.85); // Modified Color
+        align-items: flex-start; // Notice the modified location
+        margin-top: 10vh
       }
 
       .chassis ngn-overlay div {
-        background-color: #336699;
+        background-color: #ffffff;
+        color: #111111;
         width: 50vw;
         height: 30vh;
         padding: 5vh 5vw;
@@ -29,23 +52,99 @@
         border: 1px solid #cccccc;
       }
 
-      section {
+      .chassis ngn-overlay[closeOnEsc="false"] {
+        color: #ffffff;
+        font-size: 150%;
+      }
+
+      .chassis ngn-overlay[closeOnEsc="false"] > span {
         position: absolute;
-        top: 65px;
-        left: 65px;
-        bottom: 65px;
-        right: 65px;
-        border: 5px solid #333333;
-        padding: 35px;
+        top: 3vh;
+        right: 3vw;
+        font-size: 200%;
+        color: #000000;
+        background: #ffffff;
+        width: 3vw;
+        height: 3vw;
+        display: flex;
+        align-items: center;;
+        justify-content: center;;
+        border-radius: 200rem;
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <section>
-      yo
-      <ngn-overlay>
-        <div>Anything can go here!</div>
-      </ngn-overlay>
-    </section>
+    <header>
+      <button>Open A</button>
+      <button>Open B</button>
+      <button>Open C</button>
+      <button>Open Custom</button>
+    </header>
+    <p>
+      The overlay is a mask that covers the entire screen. It is the
+      foundation for loading masks, modal windows, and specialized popups
+      like alerts. There are really only two methods, open() and close().
+      These methods can be invoked through code.
+    </p>
+    <p>
+      This custom element also supports 3 attributes to simplify common
+      overlay tasks. This include:
+    </p>
+    <ol>
+      <li><b>closeOnClick</b>: Close the overlay when the user clicks on the background. (Default is false)</li>
+      <li><b>closeOnClick</b>: Close the overlay when the user double clicks on the background. (Default is false)</li>
+      <li><b>closeOnEsc</b>: Close the overlay when the user presses the escape key. (Defaults to true)</li>
+    </ol>
+    <p>Developers can also close the overlay through the close() method. For examples, look at the source code for this page.</p>
+    <ngn-overlay>
+      <div>Press the escape key to close this overlay.</div>
+    </ngn-overlay>
+    <ngn-overlay closeOnClick="true">
+      <div>Click anywhere in the overlay to close it.</div>
+    </ngn-overlay>
+    <ngn-overlay closeOnDblClick="true">
+      <div>Double-click anywhere in the overlay to close it.</div>
+    </ngn-overlay>
+    <ngn-overlay closeOnEsc="false">
+      None of the attributes will close this overlay, but you can click
+      the &times; to close it (we customized it).
+      <span>&times;</span>
+    </ngn-overlay>
+    <script>
+      // hide body to prevent FOUC
+      document.body.style.opacity = 0;
+      window.addEventListener('WebComponentsReady', function() {
+        // show body now that everything is ready
+        document.body.style.opacity = 1;
+      });
+
+      var overlays = document.querySelectorAll('ngn-overlay')
+      var a = document.querySelector('header > button:nth-of-type(1)')
+      var b = document.querySelector('header > button:nth-of-type(2)')
+      var c = document.querySelector('header > button:nth-of-type(3)')
+      var d = document.querySelector('header > button:nth-of-type(4)')
+
+      a.addEventListener('click', function (e) {
+        overlays[0].open()
+      })
+
+      b.addEventListener('click', function (e) {
+        overlays[1].open()
+      })
+
+      c.addEventListener('click', function (e) {
+        overlays[2].open()
+      })
+
+      d.addEventListener('click', function (e) {
+        overlays[3].open()
+      })
+
+      var custom = document.querySelector('ngn-overlay[closeOnEsc="false"] > span')
+      custom.addEventListener('click', function (e) {
+        overlays[3].close()
+      })
+    </script>
   </body>
 </html>
