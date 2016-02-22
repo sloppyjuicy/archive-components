@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
+    <!-- <link rel="import" href="../../chassis-layout.html"/> -->
+    <!-- <script src="../../dist/chassis-layout.min.js"></script> -->
+    <script src="../../tags/chassis-layout/tag.js"></script>
+    <style>
+      #three {
+        max-width: 200px;
+      }
+      chassis-layout {
+        border: 1px solid rgba(0,0,0,.5)
+      }
+      body {
+        background: gold;
+      }
+    </style>
+  </head>
+  <body>
+    <chassis-layout type="viewport">
+      <chassis-layout type="horizontal">
+        <chassis-layout>
+          Column 1
+        </chassis-layout>
+        <chassis-layout>
+          Column 2
+          <div style="background: pink;">yo</div>
+        </chassis-layout>
+        <chassis-layout id="three">
+          Testing 2
+          <chassis-layout>
+            SubSection A
+          </chassis-layout>
+          <chassis-layout>
+            <chassis-layout>
+              SubSection B
+            </chassis-layout>
+            <chassis-layout>
+              SubSection C
+            </chassis-layout>
+          </chassis-layout>
+        </chassis-layout>
+      </chassis-layout>
+    </chassis-layout>
+  </body>
+</html>

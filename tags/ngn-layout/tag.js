@@ -1,9 +1,9 @@
-var NgnLayout = document.registerElement('ngn-layout', {
+var NgnLayout = document.registerElement('chassis-layout', {
   prototype: Object.create(HTMLElement.prototype, {
     initTpl: {
       enumerable: false,
       value: function () {
-        var tag = 'ngn-layout'
+        var tag = 'chassis-layout'
         var src = document.querySelector('script[src*="' + tag + '"]') || document.querySelector('link[href*="' + tag + '.html"]')
 
         document.body.classList.add('chassis')

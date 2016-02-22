@@ -1,4 +1,4 @@
-# ngn-cycle
+# chassis-cycle
 
 This custom element will display one HTML element at a time. Useful for wizards,
 scrollers, tab navigation, or anything else that needs to display one
@@ -14,7 +14,7 @@ thing at a time.
   <option value="2">Slide 2</option>
   <option value="3">Slide 3</option>
 </select>
-<ngn-cycle restart="true">
+<chassis-cycle restart="true">
   <section class="active">
     Screen 1
   </section>
@@ -24,9 +24,9 @@ thing at a time.
   <section>
     Screen 3
   </section>
-</ngn-cycle>
+</chassis-cycle>
 <script type="text/javascript">
-  var cycle = document.querySelector('ngn-cycle')
+  var cycle = document.querySelector('chassis-cycle')
 
   cycle.addEventListener('change', function (e) {
     console.log(e.detail)

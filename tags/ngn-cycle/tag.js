@@ -1,9 +1,9 @@
-var NgnCycle = document.registerElement('ngn-cycle', { // eslint-disable-line no-unused-vars
+var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-line no-unused-vars
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
     initTpl: {
       enumerable: false,
       value: function () {
-        var tag = 'ngn-cycle'
+        var tag = 'chassis-cycle'
         var src = document.querySelector('script[src*="' + tag + '"]') || document.querySelector('link[href*="' + tag + '.html"]')
 
         document.body.classList.add('chassis')

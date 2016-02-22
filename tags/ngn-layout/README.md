@@ -1,9 +1,9 @@
-# ngn-layout
+# chassis-layout
 
 This custom element can be used to create page layouts. It is currently a tool
 for rapid prototyping. It applies very simple flexbox CSS properties to establish
 a layout conforming to whatever constraints the developer desires. Each
-`<ngn-layout>` tag can be thought of as a container, similar to a `<div>` or
+`<chassis-layout>` tag can be thought of as a container, similar to a `<div>` or
 `<section>`, but with flexbox pre-applied. It is lightweight, reusable, and
 it can be styled in any manner.
 
@@ -17,14 +17,14 @@ for single page apps.
 ```html
 <html>
   <head>
-  <!-- <link rel="import" href="../../ngn-layout.html"/> -->
-  <!-- <script src="../../dist/ngn-layout.min.js"></script> -->
-  <!-- <script src="../../tags/ngn-layout/tag.js"></script> -->
+  <!-- <link rel="import" href="../../chassis-layout.html"/> -->
+  <!-- <script src="../../dist/chassis-layout.min.js"></script> -->
+  <!-- <script src="../../tags/chassis-layout/tag.js"></script> -->
   <script src="//cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-  <script src="//cdn.jsdelivr.net/ngn-components/latest/ngn-layout.min.js"></script>
+  <script src="//cdn.jsdelivr.net/chassis-components/latest/chassis-layout.min.js"></script>
   </head>
   <body>
-    <ngn-layout></ngn-layout>
+    <chassis-layout></chassis-layout>
   </body>
 </html>
 ```
@@ -36,32 +36,32 @@ for single page apps.
   #three {
     max-width: 200px;
   }
-  ngn-layout {
+  chassis-layout {
     border: 1px solid rgba(0,0,0,.5)
   }
 </style>
-<ngn-layout type="viewport">
-  <ngn-layout>
+<chassis-layout type="viewport">
+  <chassis-layout>
     Column 1
-  </ngn-layout>
-  <ngn-layout>
+  </chassis-layout>
+  <chassis-layout>
     Column 2
-  </ngn-layout>
-  <ngn-layout type="vertical" id="three">
+  </chassis-layout>
+  <chassis-layout type="vertical" id="three">
     Testing 2
-    <ngn-layout>
+    <chassis-layout>
       SubSection A
-    </ngn-layout>
-    <ngn-layout type="horizontal">
-      <ngn-layout>
+    </chassis-layout>
+    <chassis-layout type="horizontal">
+      <chassis-layout>
         SubSection B
-      </ngn-layout>
-      <ngn-layout>
+      </chassis-layout>
+      <chassis-layout>
         SubSection C
-      </ngn-layout>
-    </ngn-layout>
-  </ngn-layout>
-</ngn-layout>
+      </chassis-layout>
+    </chassis-layout>
+  </chassis-layout>
+</chassis-layout>
 ```
 
 The code above creates a simple modular layout.

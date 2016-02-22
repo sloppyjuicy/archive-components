@@ -7,7 +7,7 @@
     "Graham Butler <graham@grahambutler.com>"
   ],
   "description": "NGN Chassis Web Components library.",
-  "main": "dist/ngn-cycle.min.js",
+  "main": "dist/chassis-cycle.min.js",
   "moduleType": [
     "globals"
   ],

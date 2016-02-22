@@ -5,9 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
     <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-    <!-- <link rel="import" href="../../ngn-listitem.html"/> -->
-    <!-- <script src="../../dist/ngn-listitem.min.js"></script> -->
-    <script src="../../tags/ngn-list/tag.js"></script>
+    <!-- <link rel="import" href="../../chassis-listitem.html"/> -->
+    <!-- <script src="../../dist/chassis-listitem.min.js"></script> -->
+    <script src="../../tags/chassis-list/tag.js"></script>
     <style>
       html, body {
         display: flex;
@@ -25,7 +25,7 @@
         max-width: 150px;
         margin-right: 6px;
       }
-      ngn-list {
+      chassis-list {
         border: 1px solid black;
         border-radius: 3px;
         display: list-item;
@@ -84,7 +84,7 @@
         border: 2px solid rgba(0,0,0,.8);
         border-radius: 3px;
       }
-      ngn-list > .active {
+      chassis-list > .active {
         border: 1px solid red
       }
     </style>
@@ -98,7 +98,7 @@
       <button>Sort By Letter (DESC)</button>
       <button>Sort By Number (DESC)</button>
     </header>
-    <ngn-list rollover="true">
+    <chassis-list rollover="true">
       <section>A4</section>
       <section>B4</section>
       <section>C4</section>
@@ -109,7 +109,7 @@
       <section>H2</section>
       <section>I2</section>
       <section>J1</section>
-    </ngn-list>
+    </chassis-list>
     <h3 tabindex="2">Definitions</h3>
     <ol>
       <li>The filter applies to anything ending in "3".</li>
@@ -122,7 +122,7 @@
     <h3>Activity Log:</h3>
     <div id="log"></div>
     <script type="text/javascript">
-      var list = document.querySelector('ngn-list')
+      var list = document.querySelector('chassis-list')
       var filterButton = document.querySelector('button:first-of-type')
       var selectAllButton  = document.querySelector('button:nth-of-type(2)')
       var clearSelectionButton  = document.querySelector('button:nth-of-type(3)')

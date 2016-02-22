@@ -11,7 +11,7 @@ TODO: Fill this in.
   <!-- <script src="../../dist/{{TagName}}.min.js"></script> -->
   <!-- <script src="../../tags/{{TagName}}/tag.js"></script> -->
   <script src="//cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-  <script src="//cdn.jsdelivr.net/ngn-components/latest/{{TagName}}.min.js"></script>
+  <script src="//cdn.jsdelivr.net/chassis-components/latest/{{TagName}}.min.js"></script>
   </head>
   <body>
     <{{TagName}}></{{TagName}}>

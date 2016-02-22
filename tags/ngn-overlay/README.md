@@ -1,4 +1,4 @@
-# ngn-overlay
+# chassis-overlay
 
 TODO: Fill this in.
 
@@ -7,14 +7,14 @@ TODO: Fill this in.
 ```html
 <html>
   <head>
-  <!-- <link rel="import" href="../../ngn-overlay.html"/> -->
-  <!-- <script src="../../dist/ngn-overlay.min.js"></script> -->
-  <!-- <script src="../../tags/ngn-overlay/tag.js"></script> -->
+  <!-- <link rel="import" href="../../chassis-overlay.html"/> -->
+  <!-- <script src="../../dist/chassis-overlay.min.js"></script> -->
+  <!-- <script src="../../tags/chassis-overlay/tag.js"></script> -->
   <script src="//cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-  <script src="//cdn.jsdelivr.net/ngn-components/latest/ngn-overlay.min.js"></script>
+  <script src="//cdn.jsdelivr.net/chassis-components/latest/chassis-overlay.min.js"></script>
   </head>
   <body>
-    <ngn-overlay></ngn-overlay>
+    <chassis-overlay></chassis-overlay>
   </body>
 </html>
 ```
@@ -22,5 +22,5 @@ TODO: Fill this in.
 ## Example
 
 ```html
-<ngn-overlay></ngn-overlay>
+<chassis-overlay></chassis-overlay>
 ```

@@ -1,5 +1,5 @@
 /**
- * @tag ngn-list
+ * @tag chassis-list
  * Provides functionality for a list of elements.
  * @fires item.create
  * Fired when an item is added to the list. The item which is
@@ -20,7 +20,7 @@
  * Fired when a previously filtered item is unselected. The item which is
  * unfiltered is returned to the event handler.
  */
-var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-undef, no-unused-vars
+var ChassisList = document.registerElement('chassis-list', { // eslint-disable-line no-undef, no-unused-vars
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
     // Initializes the web component.
     createdCallback: {
@@ -1001,16 +1001,16 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      * @example
      * **Original HTML**
      * ```html
-     * <ngn-list>
+     * <chassis-list>
      *   <section>A1</section>
      *   <section>B2</section>
      *   <section>C2</section>
-     * </ngn-list>
+     * </chassis-list>
      * ```
      *
      * **Apply a filter...**
      * ```js
-     * var li = document.querySelector('ngn-list')
+     * var li = document.querySelector('chassis-list')
      * li.filter(function (element, index, listarray) {
      *   return element.textContent.substr(1, 1) === '1'
      * })
@@ -1018,11 +1018,11 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
      *
      * **Resulting HTML**
      * ```html
-     * <ngn-list>
+     * <chassis-list>
      *   <section filter="true">A1</section>
      *   <section >B2</section>
      *   <section>C2</section>
-     * </ngn-list>
+     * </chassis-list>
      * ```
      * @fires item.filter
      * Fired when an item matches the filter criteria.
@@ -1035,7 +1035,7 @@ var NgnList = document.registerElement('ngn-list', { // eslint-disable-line no-u
       value: function (fn, deselectFiltered) {
         deselectFiltered = typeof deselectFiltered === 'boolean' ? deselectFiltered : true
         if (!(typeof fn === 'function')) {
-          console.warn('[ngn-list].filter(myFunction) method requires a function, but none was provided.')
+          console.warn('[chassis-list].filter(myFunction) method requires a function, but none was provided.')
           fn = function () { return false }
         }
 

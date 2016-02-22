@@ -109,7 +109,7 @@ gulp.task('create', function () {
       type: 'input',
       name: 'tag',
       message: 'Tag Name:',
-      'default': 'ngn-tag',
+      'default': 'chassis-tag',
       validate: function (input) {
         if (input.split('-').filter(function (el) {
           return el.trim().length > 0

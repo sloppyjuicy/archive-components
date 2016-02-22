@@ -5,25 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
     <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-    <!-- <link rel="import" href="../../ngn-cycle.html"/> -->
-    <!-- <script src="../../dist/ngn-cycle.min.js"></script> -->
-    <script src="../../tags/ngn-cycle/tag.js"></script>
+    <!-- <link rel="import" href="../../chassis-cycle.html"/> -->
+    <!-- <script src="../../dist/chassis-cycle.min.js"></script> -->
+    <script src="../../tags/chassis-cycle/tag.js"></script>
     <style>
-      ngn-cycle {
+      chassis-cycle {
         display: block;
         border: 1px solid black;
         margin-top: 12px;
       }
-      ngn-cycle > section {
+      chassis-cycle > section {
         padding: 12px;
       }
-      ngn-cycle > section:nth-of-type(1) {
+      chassis-cycle > section:nth-of-type(1) {
         background-color: #cccccc;
       }
-      ngn-cycle > section:nth-of-type(2) {
+      chassis-cycle > section:nth-of-type(2) {
         background-color: gold;
       }
-      ngn-cycle > section:nth-of-type(3) {
+      chassis-cycle > section:nth-of-type(3) {
         background-color: #336699;
         color: #ffffff;
       }
@@ -38,7 +38,7 @@
       <option value="3">Slide 3</option>
       <option value="4">Slide 4</option>
     </select>
-    <ngn-cycle restart="true">
+    <chassis-cycle restart="true">
       <section class="active">
         Screen 1
       </section>
@@ -51,9 +51,9 @@
       <div>
         Unique Screen 4 (div)
       </div>
-    </ngn-cycle>
+    </chassis-cycle>
     <script type="text/javascript">
-      var cycle = document.querySelector('ngn-cycle')
+      var cycle = document.querySelector('chassis-cycle')
 
       cycle.addEventListener('change', function (e) {
         console.log(e.detail)

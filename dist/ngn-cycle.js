@@ -1,4 +1,4 @@
-var NgnCycle = document.registerElement('ngn-cycle', { // eslint-disable-line no-unused-vars
+var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-line no-unused-vars
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
     initTpl: {
       enumerable: false,

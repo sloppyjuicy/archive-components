@@ -1,10 +1,10 @@
-var NgnOverlay = document.registerElement('ngn-overlay', { // eslint-disable-line, no-undef
+var ChassisOverlay = document.registerElement('chassis-overlay', { // eslint-disable-line, no-undef
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
     initTpl: {
       enumerable: false,
       value: function () {
 				document.body.classList.add('chassis')
-				var content = '<template> <style> @charset "UTF-8"; :host { background: rgba(0,0,0,.6); display: flex; position: fixed; top: 0; right: 0; bottom: 0; left: 0; margin: 0; padding: 0; align-items: center; justify-content: center; opacity: 0; pointer-events: none; } ngn-overlay { background: rgba(0,0,0,.6); display: flex; position: fixed; top: 0; right: 0; bottom: 0; left: 0; margin: 0; padding: 0; align-items: center; justify-content: center; opacity: 0; pointer-events: none; } :host([active="true"]) { opacity: 1; pointer-events: auto; } ngn-overlay[active="true"] { opacity: 1; pointer-events: auto; } </style> <!-- <ngncontent id="host" class="active"> --> <content></content> <!-- </ngncontent> --> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
+				var content = '<template> <style> @charset "UTF-8"; :host { background: rgba(0,0,0,.6); display: flex; position: fixed; top: 0; right: 0; bottom: 0; left: 0; margin: 0; padding: 0; align-items: center; justify-content: center; opacity: 0; pointer-events: none; } chassis-overlay { background: rgba(0,0,0,.6); display: flex; position: fixed; top: 0; right: 0; bottom: 0; left: 0; margin: 0; padding: 0; align-items: center; justify-content: center; opacity: 0; pointer-events: none; } :host([active="true"]) { opacity: 1; pointer-events: auto; } chassis-overlay[active="true"] { opacity: 1; pointer-events: auto; } </style> <!-- <ngncontent id="host" class="active"> --> <content></content> <!-- </ngncontent> --> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
 				var shadow = this.createShadowRoot()
 				var ph = document.createElement('p')
 				ph.insertAdjacentHTML('afterbegin', content)

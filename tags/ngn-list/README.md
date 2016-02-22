@@ -1,6 +1,6 @@
-# ngn-list
+# chassis-list
 
-The `<ngn-list>` custom element manages the state of elements within it, treating them as items of a list. This provides behavior management features,
+The `<chassis-list>` custom element manages the state of elements within it, treating them as items of a list. This provides behavior management features,
 but does not explicitly force a UI.
 
 ### Behavioral Management Capabilities:
@@ -34,7 +34,7 @@ managing the visual presentation of the component. For example, to visually
 highlight selected items, the CSS should highlight elements with the selected attribute:
 
 ```css
-ngn-list [selected="true"] {
+chassis-list [selected="true"] {
   background-color: #336699;
   color: #ffffff
 }
@@ -43,7 +43,7 @@ ngn-list [selected="true"] {
 Likewise, visually removing filtered items is also accomplished via CSS:
 
 ```css
-ngn-list [filter="true"] {
+chassis-list [filter="true"] {
   display: none;
 }
 ```
@@ -55,14 +55,14 @@ See the example, which contains CSS for styling based on filter and selection cr
 ```html
 <html>
   <head>
-  <!-- <link rel="import" href="../../ngn-list.html"/> -->
-  <!-- <script src="../../dist/ngn-list.min.js"></script> -->
-  <!-- <script src="../../tags/ngn-list/tag.js"></script> -->
+  <!-- <link rel="import" href="../../chassis-list.html"/> -->
+  <!-- <script src="../../dist/chassis-list.min.js"></script> -->
+  <!-- <script src="../../tags/chassis-list/tag.js"></script> -->
   <script src="//cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-  <script src="//cdn.jsdelivr.net/ngn-components/latest/ngn-list.min.js"></script>
+  <script src="//cdn.jsdelivr.net/chassis-components/latest/chassis-list.min.js"></script>
   </head>
   <body>
-    <ngn-list>...</ngn-list>
+    <chassis-list>...</chassis-list>
   </body>
 </html>
 ```
@@ -70,7 +70,7 @@ See the example, which contains CSS for styling based on filter and selection cr
 ## Example
 
 ```html
-<ngn-list>
+<chassis-list>
   <section>A4</section>
   <section>B4</section>
   <section>C4</section>
@@ -81,10 +81,10 @@ See the example, which contains CSS for styling based on filter and selection cr
   <section>H2</section>
   <section>I2</section>
   <section>J1</section>
-</ngn-list>
+</chassis-list>
 
 <script type="text/javascript">
-  var list = document.querySelector('ngn-list')
+  var list = document.querySelector('chassis-list')
 
   list.addEventListener('item.create', function (e) {
     console.info('Created', e.detail.item)
@@ -110,7 +110,7 @@ Currently, there is only one recognized attribute, `rollover`.
 
 ### rollover
 
-Setting `<ngn-list rollover="true">...</ngn-list>` will make arrow key functions
+Setting `<chassis-list rollover="true">...</chassis-list>` will make arrow key functions
 automatically roll over. For example, if the last item on the list is currently
 selected and the user presses the next arrow (right or down), the selection
 process rolls over to the first element. Likewise, if the first list item is selected
