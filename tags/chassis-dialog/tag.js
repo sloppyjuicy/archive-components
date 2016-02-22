@@ -1,9 +1,9 @@
-var NgnWindow = document.registerElement('ngn-window', { // eslint-disable-line, no-undef
+var ChassisDialog = document.registerElement('chassis-dialog', { // eslint-disable-line, no-undef
   prototype: Object.create(HTMLElement.prototype, { // eslint-disable-line no-undef
     initTpl: {
       enumerable: false,
       value: function () {
-        var tag = 'ngn-window'
+        var tag = 'chassis-dialog'
         var src = document.querySelector('script[src*="' + tag + '"]') || document.querySelector('link[href*="' + tag + '.html"]')
 
         document.body.classList.add('chassis')
@@ -35,30 +35,45 @@ var NgnWindow = document.registerElement('ngn-window', { // eslint-disable-line,
     createdCallback: {
       value: function () {
         var me = this
-        var dragging = false
+        var dragel = null
         this.initTpl()
 
-      // if (this.getAttribute('draggable') === 'true') {
-      //   this.addEventListener('mousedown', function (e) {
-      //     dragging = true
-      //     e.preventDefault()
-      //   })
-      //   this.addEventListener('mouseup', function (e) {
-      //     // e.preventDefault()
-      //     dragging = false
-      //   })
-      //   document.addEventListener('mousemove', function (e) {
-      //     console.log(dragging)
-      //     if (dragging) {
-      //       var width = e.target.offsetWidth / 2
-      //       var height = e.target.offsetHeight / 2
-      //       var x = e.clientX - width
-      //       var y = e.clientY - height
-      //       e.target.setAttribute('style', 'left: ' + x + 'px; top: ' + y + 'px;z-index: 9999;')
-      //     }
-      //   })
-      // }
+        // Make it draggable
+        if (this.getAttribute('draggable') === 'true') {
+          this.addEventListener('mousedown', function (e) {
+            dragel = e.target
+            e.preventDefault()
+          })
+
+          this.addEventListener('mouseup', function (e) {
+            dragel = null
+          })
+
+          document.addEventListener('mouseleave', function () {
+            dragel = null
+          })
+
+          document.addEventListener('mousemove', function (e) {
+            if (dragel) {
+              var w = dragel.offsetWidth / 2
+              var h = dragel.offsetHeight / 2
+              var r = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth || 0) - ((w * 2) + (e.clientX - w))
+              dragel.style.left = (e.clientX - w) + 'px'
+              dragel.style.top = (e.clientY - h) + 'px'
+              dragel.style.right = r + 'px'
+              dragel.style['z-index'] = 9999999
+            }
+          })
+        }
       }
     }
+
+  // Expand & Collapse (collapse returns to original size)
+  // Resizing
+  // setPosition
+  // open/close
+  // animateFrom
+  // Bring to front/back
+  // Forward/Backward
   })
 })
