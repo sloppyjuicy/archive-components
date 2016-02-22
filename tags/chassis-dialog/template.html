@@ -4,18 +4,22 @@
     :host {
       position: absolute;
       z-index: 1000;
-      border: 1px solid gold;
     }
-    ngn-window {
+    chassis-dialog {
       position: absolute;
       z-index: 1000;
-      border: 1px solid gold;
     }
     :host([draggable="true"]) {
       cursor: move;
     }
-    ngn-window([draggable="true"]) {
+    chassis-dialog([draggable="true"]) {
       cursor: move;
+    }
+    :host > div:first-of-type {
+      border: 2px solid gold;
+    }
+    :chassis-dialog > div:first-of-type {
+      border: 2px solid gold;
     }
     /*:host > div:first-of-type {
 
@@ -24,5 +28,5 @@
 
     }*/
   </style>
-  <div><b>Test</b><content></content></div>
+  <div><content></content></div>
 </template>

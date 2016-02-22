@@ -41,7 +41,10 @@
     </style>
   </head>
   <body>
-    <chassis-dialog closable="true" draggable="true">
+    <header>
+      <span>Source</span>
+    </header>
+    <chassis-dialog closable="true" draggable="true" contain="true" from="body > header > span">
       You can put whatever you want in the window!
     </chassis-dialog>
   </body>
