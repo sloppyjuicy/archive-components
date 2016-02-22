@@ -66,6 +66,7 @@ var NgnOverlay = document.registerElement('ngn-overlay', { // eslint-disable-lin
         window.removeEventListener('keydown', function (e) {
           me.handleEscPress(e)
         })
+        document.body.style.overflow = 'initial'
         this.removeAttribute('active')
       }
     },
@@ -83,6 +84,7 @@ var NgnOverlay = document.registerElement('ngn-overlay', { // eslint-disable-lin
             me.handleEscPress(e)
           })
         }
+        document.body.style.overflow = 'hidden'
         this.setAttribute('active', 'true')
       }
     }

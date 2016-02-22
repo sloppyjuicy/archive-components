@@ -1,0 +1,28 @@
+<template>
+  <style>
+    @charset "UTF-8";
+    :host {
+      position: absolute;
+      z-index: 1000;
+      border: 1px solid gold;
+    }
+    ngn-window {
+      position: absolute;
+      z-index: 1000;
+      border: 1px solid gold;
+    }
+    :host([draggable="true"]) {
+      cursor: move;
+    }
+    ngn-window([draggable="true"]) {
+      cursor: move;
+    }
+    /*:host > div:first-of-type {
+
+    }
+    ngn-window > div:first-of-type {
+
+    }*/
+  </style>
+  <div><b>Test</b><content></content></div>
+</template>
