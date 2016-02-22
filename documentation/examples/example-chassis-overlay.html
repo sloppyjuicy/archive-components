@@ -96,21 +96,21 @@
       overlay tasks. This include:
     </p>
     <ol>
-      <li><b>closeOnClick</b>: Close the overlay when the user clicks on the background. (Default is false)</li>
-      <li><b>closeOnClick</b>: Close the overlay when the user double clicks on the background. (Default is false)</li>
+      <li><b>closeOnClick</b>: Close the overlay when the user clicks on the background. (Default is true)</li>
+      <li><b>closeOnDblClick</b>: Close the overlay when the user double clicks on the background. (Default is false)</li>
       <li><b>closeOnEsc</b>: Close the overlay when the user presses the escape key. (Defaults to true)</li>
     </ol>
     <p>Developers can also close the overlay through the close() method. For examples, look at the source code for this page.</p>
-    <chassis-overlay>
+    <chassis-overlay closeOnClick="false">
       <div>Press the escape key to close this overlay.</div>
     </chassis-overlay>
-    <chassis-overlay closeOnClick="true">
+    <chassis-overlay closeOnEsc="false">
       <div>Click anywhere in the overlay to close it.</div>
     </chassis-overlay>
-    <chassis-overlay closeOnDblClick="true">
+    <chassis-overlay closeOnDblClick="true" closeOnEsc="false">
       <div>Double-click anywhere in the overlay to close it.</div>
     </chassis-overlay>
-    <chassis-overlay closeOnEsc="false">
+    <chassis-overlay closeOnEsc="false" closeOnClick="false">
       None of the attributes will close this overlay, but you can click
       the &times; to close it (we customized it).
       <span>&times;</span>

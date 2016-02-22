@@ -38,6 +38,14 @@ var ChassisOverlay = document.registerElement('chassis-overlay', { // eslint-dis
 
         var me = this
 
+        // Set sane defaults.
+        if (this.getAttribute('closeonclick') === null) {
+          this.setAttribute('closeonclick', 'true')
+        }
+        if (this.getAttribute('closeonesc') === null) {
+          this.setAttribute('closeonesc', 'true')
+        }
+
         // If close on dblclick isn't false, close the overlay when it is double clicked.
         /**
          * @attribute {boolean} [closeOnClick=false]
