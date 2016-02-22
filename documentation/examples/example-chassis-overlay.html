@@ -145,7 +145,7 @@
         overlays[3].open()
       })
 
-      var custom = document.querySelector('chassis-overlay[closeOnEsc="false"] > span')
+      var custom = document.querySelector('chassis-overlay[closeOnEsc="false"]:last-of-type > span')
       custom.addEventListener('click', function (e) {
         overlays[3].close()
       })
