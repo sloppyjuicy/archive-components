@@ -1,14 +1,14 @@
-# Chassis Web Components
+# Chassis Web Components (formerly NGN Web Components)
 
-The chassis- Web Components library is a collection of vanilla web components. The
+The Chassis Web Components library is a collection of vanilla web components. The
 library is designed to isolate common functionality and deliver it in a simple,
 reusable manner.
 
 For a list of components, see the [custom tags directory](./tree/master/tags).
 You can also see these elements in action by looking at the [examples site](http://ngnjs.github.io/chassis-components/documentation).
-Unfamiliar with chassis-? Head over to the [ngn.js.org](http://ngn.js.org).
+Unfamiliar with Chassis/NGN? Head over to the [ngn.js.org](http://ngn.js.org).
 
-## Using chassis- Web Components
+## Using Chassis Web Components
 
 The web components are available via the [JSDelivr CDN](http://www.jsdelivr.com/projects/ngn-components),
 npm, or bower. You can also download them from the [releases page](./releases).
@@ -30,7 +30,7 @@ across modern browsers (IE 11+) looks like:
   <meta name="viewport" content="width=device-width">
   <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
   <script src="//cdn.jsdelivr.net/chassis-components/latest/chassis-cycle.min.js"></script>
-  <!-- <link rel="import" href="//cdn.jsdelivr.net/chassis-components/latest/chassis-cycle.min.js"/> -->
+  <!-- <link rel="import" href="//cdn.jsdelivr.net/ngn-components/latest/chassis-cycle.min.js"/> -->
 </head>
 
 <body>
@@ -59,7 +59,7 @@ you're interested in.
 If you're using these components in a production website, it is probably best to
 use the concatenation features of JSDelivr. Select the components you wish to use
 and include them in one HTTP request. Alternatively, you may find
-[Chassis HTTP Preconnect](https://github.com/chassis-js/chassis-lib/blob/master/src/http.js#L631)
+[Chassis HTTP Preconnect](https://github.com/ngnjs/chassis-lib/blob/master/src/http.js#L631)
 helpful, or use `preconnect` directly in the `<head>` of your HTML page. For
 more information about preconnect, see
 [Ilya Grigorik's Preconnect article](https://www.igvita.com/2015/08/17/eliminating-roundtrips-with-preconnect/).
