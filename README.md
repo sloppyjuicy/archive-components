@@ -31,7 +31,7 @@ across modern browsers (IE 11+) looks like:
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width">
   <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-  <script src="//cdn.jsdelivr.net/chassis-components/latest/chassis-cycle.min.js"></script>
+  <script src="//cdn.jsdelivr.net/ngn-components/latest/chassis-cycle.min.js"></script>
   <!-- <link rel="import" href="//cdn.jsdelivr.net/ngn-components/latest/chassis-cycle.min.js"/> -->
 </head>
 
