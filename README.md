@@ -1,4 +1,6 @@
-# Chassis Web Components (formerly NGN Web Components)
+# Chassis Web Components
+
+_(formerly NGN Web Components)_
 
 The Chassis Web Components library is a collection of vanilla web components. The
 library is designed to isolate common functionality and deliver it in a simple,
