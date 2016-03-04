@@ -1,4 +1,4 @@
-# chassis- Chassis Web Components
+# Chassis Web Components
 
 The chassis- Web Components library is a collection of vanilla web components. The
 library is designed to isolate common functionality and deliver it in a simple,
