@@ -94,7 +94,7 @@ as [electron](http://electron.atom.io) or [NW.js](http://nwjs.io). Usage is
 straightforward:
 
 ```sh
-npm install chassis-chassis-components
+npm install ngn-chassis-components
 ```
 
 ```html
