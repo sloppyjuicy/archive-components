@@ -5,20 +5,20 @@ library is designed to isolate common functionality and deliver it in a simple,
 reusable manner.
 
 For a list of components, see the [custom tags directory](./tree/master/tags).
-You can also see these elements in action by looking at the [examples site](http://chassis-js.github.io/chassis-components/documentation).
-Unfamiliar with chassis-? Head over to the [chassis-.js.org](http://chassis-.js.org).
+You can also see these elements in action by looking at the [examples site](http://ngnjs.github.io/chassis-components/documentation).
+Unfamiliar with chassis-? Head over to the [ngn.js.org](http://ngn.js.org).
 
 ## Using chassis- Web Components
 
-The web components are available via the [JSDelivr CDN](http://www.jsdelivr.com/projects/chassis-webcomponents),
+The web components are available via the [JSDelivr CDN](http://www.jsdelivr.com/projects/ngn-components),
 npm, or bower. You can also download them from the [releases page](./releases).
 
 Most of the components use the [shadow DOM](http://w3c.github.io/webcomponents/spec/shadow/),
 which is a major part of web components. However; Chrome & Opera are the only browsers
-currently supporting it (as of 1/7/16). This also means tools like [Electron](https://electron.atom.io)
+currently supporting it (as of 3/1/16). This also means tools like [Electron](https://electron.atom.io)
 and [NW.js](http://nwjs.io) natively support shadow DOM and other web component
 features. For other browsers, Google has provided a polyfill that can be used
-until other browsers catch up. So, a common way to use chassis- web components
+until other browsers catch up. So, a common way to use chassis web components
 across modern browsers (IE 11+) looks like:
 
 ```html
@@ -59,7 +59,7 @@ you're interested in.
 If you're using these components in a production website, it is probably best to
 use the concatenation features of JSDelivr. Select the components you wish to use
 and include them in one HTTP request. Alternatively, you may find
-[chassis- Chassis HTTP Preconnect](https://github.com/chassis-js/chassis-lib/blob/master/src/http.js#L631)
+[Chassis HTTP Preconnect](https://github.com/chassis-js/chassis-lib/blob/master/src/http.js#L631)
 helpful, or use `preconnect` directly in the `<head>` of your HTML page. For
 more information about preconnect, see
 [Ilya Grigorik's Preconnect article](https://www.igvita.com/2015/08/17/eliminating-roundtrips-with-preconnect/).
@@ -101,7 +101,7 @@ npm install ngn-chassis-components
 <html>
   <head>
     <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-    <script src="node_modules/chassis-chassis-components/dist/<tag>.min.js"></script>
+    <script src="node_modules/ngn-chassis-components/dist/<tag>.min.js"></script>
     <!-- <link rel="import" href="node_modules/chassis-chassis-components/dist/<tag>.html"/> -->
   </head>
   <body>
@@ -119,7 +119,7 @@ of keeping things simple. For example, we won't accept tags like `<my-whole-app>
 but we will consider small, reusable tags.
 
 When you're ready to start building a component, the easiest way is to clone
-this repository using `git clone https://github.com/chassis-js/chassis-components.git`.
+this repository using `git clone https://github.com/ngnjs/chassis-components.git`.
 We use [Node.js](http://nodejs.org) for our build process, so you'll need that
 installed. Then run `npm install` to install all of the dependencies. Finally,
 run `gulp create` or `npm run create` to launch the new component wizard.
