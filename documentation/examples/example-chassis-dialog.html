@@ -34,6 +34,7 @@
       // Notice the scope of ".chassis", which prevents scope conflicts
       .chassis chassis-dialog {
         color: red;
+        resize: both;
         /*background-color: #000000;
         box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.39);*/
       }
@@ -44,7 +45,7 @@
     <header>
       <span>Source</span>
     </header>
-    <chassis-dialog closable="true" draggable="true" contain="true" from="body > header > span">
+    <chassis-dialog closable="true" resizable="true" draggable="false" contain="true" from="body > header > span">
       You can put whatever you want in the window!
     </chassis-dialog>
   </body>

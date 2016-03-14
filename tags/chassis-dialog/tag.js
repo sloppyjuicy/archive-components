@@ -54,7 +54,6 @@ var ChassisDialog = document.registerElement('chassis-dialog', { // eslint-disab
 
         // Make it draggable
         if (this.getAttribute('draggable') === 'true') {
-
           this.addEventListener('mousedown', function (e) {
             dragel = e.target
             e.preventDefault()
@@ -113,7 +112,24 @@ var ChassisDialog = document.registerElement('chassis-dialog', { // eslint-disab
           }
         }
       }
-    }
+    },
+
+    // transitionFrom: {
+    //   value: function () {
+    //     var clickRect = this.targetElement.getBoundingClientRect()
+    //     var dialogRect = this.getBoundingClientRect()
+    //
+    //     var scaleX = Math.min(0.5, clickRect.width / dialogRect.width)
+    //     var scaleY = Math.min(0.5, clickRect.height / dialogRect.height)
+    //     var translateY = transitionFrom ?
+    //       (-(window.pageYOffset + dialogRect.top) + clickRect.top + clickRect.height / 2 - dialogRect.height / 2) :
+    //       (-dialogRect.top + clickRect.top + clickRect.height / 2 - dialogRect.height / 2)
+    //
+    //     this.style.transform = 'translate3d(' +
+    //       (-dialogRect.left + clickRect.left + clickRect.width / 2 - dialogRect.width / 2) + 'px,' + translateY + 'px,' +
+    //       '0) scale(' + scaleX + ',' + scaleY + ')'
+    //   }
+    // }
 
   // Expand & Collapse (collapse returns to original size)
   // Resizing

@@ -4,7 +4,7 @@ var ChassisDialog = document.registerElement('chassis-dialog', { // eslint-disab
       enumerable: false,
       value: function () {
 				document.body.classList.add('chassis')
-				var content = '<template> <style> @charset "UTF-8"; :host { position: absolute; z-index: 1000; border: 1px solid gold; } ngn-window { position: absolute; z-index: 1000; border: 1px solid gold; } :host([draggable="true"]) { cursor: move; } ngn-window([draggable="true"]) { cursor: move; } /*:host > div:first-of-type {  } ngn-window > div:first-of-type {  }*/ </style> <div><b>Test</b><content></content></div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
+				var content = '<template> <style> @charset "UTF-8"; :host { position: absolute; z-index: 1000; resize: both; } chassis-dialog { position: absolute; z-index: 1000; resize: both; } :host([draggable="true"]) { cursor: move; } chassis-dialog([draggable="true"]) { cursor: move; } :host > div:first-of-type { border: 2px solid gold; } :chassis-dialog > div:first-of-type { border: 2px solid gold; } /*:host > div:first-of-type {  } ngn-window > div:first-of-type {  }*/ </style> <div><content></content></div> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
 				var shadow = this.createShadowRoot()
 				var ph = document.createElement('p')
 				ph.insertAdjacentHTML('afterbegin', content)
@@ -14,6 +14,20 @@ var ChassisDialog = document.registerElement('chassis-dialog', { // eslint-disab
 				delete ph
 }
 
+    },
+
+    screenWidth: {
+      enumerable: false,
+      get: function () {
+        return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth || 0)
+      }
+    },
+
+    screenHeight: {
+      enumerable: false,
+      get: function () {
+        return (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0)
+      }
     },
 
     createdCallback: {
@@ -41,16 +55,65 @@ var ChassisDialog = document.registerElement('chassis-dialog', { // eslint-disab
             if (dragel) {
               var w = dragel.offsetWidth / 2
               var h = dragel.offsetHeight / 2
-              var r = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth || 0) - ((w * 2) + (e.clientX - w))
-              dragel.style.left = (e.clientX - w) + 'px'
-              dragel.style.top = (e.clientY - h) + 'px'
+              var r = me.screenWidth - ((dragel.offsetWidth) + (e.clientX - w))
+              var l = (e.clientX - w)
+              var t = (e.clientY - h)
+
+              if (me.getAttribute('contain') === 'true') {
+                if (r < 0) {
+                  r = 0
+                  l = me.screenWidth - dragel.offsetWidth
+                }
+                if (l < 0) {
+                  l = 0
+                  r = me.screenWidth - dragel.offsetWidth
+                }
+                if (t < 0) {
+                  t = 0
+                }
+                if (me.screenHeight - (t + dragel.offsetHeight) < 0) {
+                  t = me.screenHeight - dragel.offsetHeight
+                }
+              }
+
+              dragel.style.left = l + 'px'
+              dragel.style.top = t + 'px'
               dragel.style.right = r + 'px'
               dragel.style['z-index'] = 9999999
             }
           })
         }
+
+        if (this.getAttribute('from') !== null) {
+          var el = this.getAttribute('from')
+          if (!(el instanceof HTMLElement)) {
+            el = document.querySelector(el)
+          }
+          if (el instanceof HTMLElement) {
+            console.log('From somewhere')
+          } else {
+            console.warn(el.toString() + ' could not be found or does not exist as a source for the chassis-dialog to animate from.')
+          }
+        }
       }
-    }
+    },
+
+    // transitionFrom: {
+    //   value: function () {
+    //     var clickRect = this.targetElement.getBoundingClientRect()
+    //     var dialogRect = this.getBoundingClientRect()
+    //
+    //     var scaleX = Math.min(0.5, clickRect.width / dialogRect.width)
+    //     var scaleY = Math.min(0.5, clickRect.height / dialogRect.height)
+    //     var translateY = transitionFrom ?
+    //       (-(window.pageYOffset + dialogRect.top) + clickRect.top + clickRect.height / 2 - dialogRect.height / 2) :
+    //       (-dialogRect.top + clickRect.top + clickRect.height / 2 - dialogRect.height / 2)
+    //
+    //     this.style.transform = 'translate3d(' +
+    //       (-dialogRect.left + clickRect.left + clickRect.width / 2 - dialogRect.width / 2) + 'px,' + translateY + 'px,' +
+    //       '0) scale(' + scaleX + ',' + scaleY + ')'
+    //   }
+    // }
 
   // Expand & Collapse (collapse returns to original size)
   // Resizing
@@ -59,5 +122,6 @@ var ChassisDialog = document.registerElement('chassis-dialog', { // eslint-disab
   // animateFrom
   // Bring to front/back
   // Forward/Backward
+  // center()
   })
 })
