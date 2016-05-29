@@ -1,6 +1,6 @@
 {
   "name": "ngn-chassis-components",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "NGN Chassis Web Components",
   "main": "index.js",
   "scripts": {
