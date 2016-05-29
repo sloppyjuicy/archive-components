@@ -4,5 +4,6 @@ _*
 !.npmignore
 !.travis.yml
 node_modules
+package.json.save
 *.log
 

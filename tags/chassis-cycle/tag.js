@@ -129,9 +129,19 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      */
     show: {
       value: function (i) {
+        var next
+        switch ((typeof i).toLowerCase()) {
+          case 'number':
+            next = this.children[i - 1]
+            break
+          case 'string':
+            next = document.querySelector(i)
+            break
+          default:
+            next = i
+        }
         var curr = this.querySelector('.active')
         curr && curr.classList.remove('active')
-        var next = this.children[i - 1]
         next && next.classList.add('active')
         this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
