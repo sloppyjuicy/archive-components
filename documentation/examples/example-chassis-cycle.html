@@ -39,10 +39,10 @@
       <option value="4">Slide 4</option>
     </select>
     <chassis-cycle restart="true">
-      <section class="active">
+      <section>
         Screen 1
       </section>
-      <section>
+      <section selected>
         Screen 2
       </section>
       <section>
@@ -70,7 +70,7 @@
       })
 
       document.querySelector('select').addEventListener('change', function (e) {
-        cycle.show(e.target.selectedOptions[0].value)
+        cycle.show(parseInt(e.target.selectedOptions[0].value, 10))
       })
     </script>
   </body>

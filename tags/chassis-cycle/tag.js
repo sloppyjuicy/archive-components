@@ -35,6 +35,30 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
     createdCallback: {
       value: function () {
         this.initTpl()
+
+        // Identify active element
+        Object.defineProperty(this, 'active', {
+          enumerable: false,
+          writable: true,
+          configurable: false,
+          value: 0
+        })
+
+        // Forcibly hide non-active elements
+        for (var i=0; i < this.children.length; i++) {
+          if (['', 'true'].indexOf(this.children[i].getAttribute('selected')) >= 0) {
+            // Active
+            this.active = i
+            if (/none/gi.test(this.children[i].style.display)) {
+              this.children[i].style.display = ''
+            }
+          } else {
+            // Inactive
+            var style = this.children[i].getAttribute('style') || ''
+            style = style + "display: none !important;"
+            this.children[i].setAttribute('style', style)
+          }
+        }
       }
     },
 
@@ -45,7 +69,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      */
     selected: {
       get: function () {
-        return this.querySelector('.active')
+        return this.querySelector('[selected]:not([selected="false"])')
       }
     },
 
@@ -56,7 +80,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      */
     selectedIndex: {
       get: function () {
-        var el = this.querySelector('.active')
+        var el = this.querySelector('[selected]:not([selected="false"])')
         return Array.prototype.slice.call(el.parentNode.children).indexOf(el)
       }
     },
@@ -69,15 +93,16 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      */
     next: {
       value: function (callback) {
-        var curr = this.querySelector('.active')
+        var curr = this.selected
         var next = curr ? curr.nextElementSibling : null
-        curr && curr.classList.remove('active')
+        if (curr) {
+          this.hide(curr)
+        }
         if (curr && next) {
-          next.classList.add('active')
+          this.show(next)
         } else if (this.getAttribute('restart') === 'true') {
-          // next = this.querySelector('section')
           next = this.children[0]
-          next.classList.add('active')
+          this.show(next)
         }
         this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
@@ -97,11 +122,13 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      */
     previous: {
       value: function (callback) {
-        var curr = this.querySelector('.active')
+        var curr = this.selected
         var prev = curr ? curr.previousElementSibling : null
-        curr && curr.classList.remove('active')
+        if (curr) {
+          this.hide(curr)
+        }
         if (curr && prev) {
-          prev.classList.add('active')
+          this.show(prev)
         } else if (this.getAttribute('restart') === 'true') {
           // If current selection is first, display the last
           if (curr === this.children[0]) {
@@ -109,7 +136,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
           } else {
             prev = this.children[0]
           }
-          prev.classList.add('active')
+          this.show(prev)
         }
         this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
@@ -118,6 +145,23 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
           }
         }))
         callback && callback(prev || null)
+      }
+    },
+
+    hide: {
+      enumerable: false,
+      value: function (el) {
+        if (el.hasAttribute('selected')) {
+          el.removeAttribute('selected')
+        }
+        el.setAttribute('style', el.style.display.replace(el.style.display, 'display: none !important;'))
+      }
+    },
+
+    hideActive: {
+      enumerable: false,
+      value: function () {
+        this.hide(this.selected)
       }
     },
 
@@ -135,14 +179,19 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
             next = this.children[i - 1]
             break
           case 'string':
-            next = document.querySelector(i)
+            next = this.querySelector(i)
             break
           default:
             next = i
         }
-        var curr = this.querySelector('.active')
-        curr && curr.classList.remove('active')
-        next && next.classList.add('active')
+        var curr = this.selected
+        if (curr) {
+          this.hideActive()
+        }
+        if (next) {
+          next.setAttribute('selected', 'true')
+          next.setAttribute('style', next.style.display.replace(next.style.display, ''))
+        }
         this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
             previous: curr || null,
