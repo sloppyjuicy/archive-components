@@ -4,7 +4,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
       enumerable: false,
       value: function () {
 				document.body.classList.add('chassis')
-				var content = '<template> <!--<style> @charset "UTF-8"; div { display: flex; flex: 1 1 auto; } div > * { display: none; flex: 1 1 auto; } ::content > * { display: none; flex: 1 1 auto; } div > .active { display: flex; } ::content > .active { display: flex; } </style>--> <!-- <div id="host"> --> <content></content> <!-- </div> --> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
+				var content = '<template> <content></content> </template> '.replace(/<(\/?)template(.*?)>/gi,'')
 				var shadow = this.createShadowRoot()
 				var ph = document.createElement('p')
 				ph.insertAdjacentHTML('afterbegin', content)
