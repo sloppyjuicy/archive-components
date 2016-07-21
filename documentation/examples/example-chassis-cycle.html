@@ -72,6 +72,20 @@
       document.querySelector('select').addEventListener('change', function (e) {
         cycle.show(parseInt(e.target.selectedOptions[0].value, 10))
       })
+
+      var run = function () {
+        var newSection = document.createElement('section')
+
+        newSection.innerHTML = 'test'
+        cycle.appendChild(newSection)
+
+        var content = document.createElement('b')
+        content.innerHTML = 'bold'
+
+        newSection.appendChild(content)
+
+        console.log('DONE')
+      }
     </script>
   </body>
 </html>

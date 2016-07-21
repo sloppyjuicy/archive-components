@@ -45,6 +45,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
         })
 
         // Forcibly hide non-active elements
+        var me = this
         for (var i=0; i < this.children.length; i++) {
           if (['', 'true'].indexOf(this.children[i].getAttribute('selected')) >= 0) {
             // Active
@@ -54,11 +55,47 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
             }
           } else {
             // Inactive
-            var style = this.children[i].getAttribute('style') || ''
-            style = style + "display: none !important;"
-            this.children[i].setAttribute('style', style)
+            me.processChildStyles(this.children[i])
           }
         }
+
+        // Watch for new children and apply styles appropriately.
+        var observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+              if (mutation.addedNodes.length > 0) {
+                me.processChildStyles(mutation.addedNodes[0])
+              }
+              if (mutation.removedNodes.length > 0) {
+                if (!me.selected) {
+                  me.previous()
+                }
+              }
+            }
+          })
+        })
+
+        observer.observe(this, {
+          attributes: false,
+          childList: true,
+          characterData: false
+        })
+      }
+    },
+
+    /**
+     * @method processChildStyles
+     * Make the child element a part of the component.
+     * @param {HTMLElement} element
+     * The HTML element to start managing as a cycle pane.
+     * @private
+     */
+    processChildStyles: {
+      enumerable: false,
+      value: function (element) {
+        var style = element.getAttribute('style') || ''
+        style = (style + ";display: none !important;").replace(/;;/gi, ';')
+        element.setAttribute('style', style)
       }
     },
 
@@ -95,22 +132,21 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
       value: function (callback) {
         var curr = this.selected
         var next = curr ? curr.nextElementSibling : null
+
         if (curr) {
           this.hide(curr)
         }
+
         if (curr && next) {
           this.show(next)
         } else if (this.getAttribute('restart') === 'true') {
           next = this.children[0]
           this.show(next)
         }
-        this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
-          detail: {
-            previous: curr || null,
-            el: next || null
-          }
-        }))
-        callback && callback(next || null)
+
+        if (callback) {
+          callback(next || null)
+        }
       }
     },
 
@@ -124,9 +160,11 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
       value: function (callback) {
         var curr = this.selected
         var prev = curr ? curr.previousElementSibling : null
+
         if (curr) {
           this.hide(curr)
         }
+
         if (curr && prev) {
           this.show(prev)
         } else if (this.getAttribute('restart') === 'true') {
@@ -138,13 +176,10 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
           }
           this.show(prev)
         }
-        this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
-          detail: {
-            next: curr || null,
-            el: prev || null
-          }
-        }))
-        callback && callback(prev || null)
+
+        if (callback) {
+          callback(prev || null)
+        }
       }
     },
 
@@ -154,6 +189,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
         if (el.hasAttribute('selected')) {
           el.removeAttribute('selected')
         }
+
         el.setAttribute('style', el.style.display.replace(el.style.display, 'display: none !important;'))
       }
     },
@@ -172,26 +208,32 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      * The index of the screen to display.
      */
     show: {
-      value: function (i) {
+      value: function (index) {
         var next
-        switch ((typeof i).toLowerCase()) {
+        switch ((typeof index).toLowerCase()) {
           case 'number':
-            next = this.children[i - 1]
+            next = this.children[index - 1]
             break
+
           case 'string':
-            next = this.querySelector(i)
+            next = this.querySelector(index)
             break
+
           default:
-            next = i
+            next = index
         }
+
         var curr = this.selected
+
         if (curr) {
           this.hideActive()
         }
+
         if (next) {
           next.setAttribute('selected', 'true')
           next.setAttribute('style', next.style.display.replace(next.style.display, ''))
         }
+
         this.dispatchEvent(new CustomEvent('change', { // eslint-disable-line no-undef
           detail: {
             previous: curr || null,
@@ -206,17 +248,17 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      * A helper method to display the first element.
      */
     first: {
-      value: function (i) {
+      value: function () {
         this.show(1)
       }
     },
 
     /**
      * @method last
-     * A helper method to display the first element.
+     * A helper method to display the last element.
      */
     last: {
-      value: function (i) {
+      value: function () {
         this.show(this.children.length)
       }
     }

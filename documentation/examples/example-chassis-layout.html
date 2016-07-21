@@ -16,15 +16,43 @@
         border: 1px solid rgba(0,0,0,.5)
       }
       body {
-        background: gold;
+        background: rgba(0,0,0,.09);
+      }
+      .scrollable {
+        display: block;
+        overflow: auto;
+        height: 100vh;
+      }
+      .spacer {
+        display: flex;
+        border: 1px dashed rgba(0,0,0, .13);
+      }
+      .spacer:after {
+        content: 'Spacer';
+        color: rgba(0,0,0, .3);
+        background-color: rgba(0,0,0,.15);
+        margin: 3px;
+        display: flex;
+        justify-content: center !important;
+        align-items: center;
+        align-content: center;
+        min-height: 100%;
+        min-width: 100%;
+        font-family: Arial;
       }
     </style>
   </head>
   <body>
     <chassis-layout type="viewport">
       <chassis-layout type="horizontal">
-        <chassis-layout>
-          Column 1
+        <chassis-layout type="vertical">
+          <div class="scrollable">
+            Column 1
+            <div style="min-height: 60vh;" class="spacer"></div>
+            Scrollable Content.
+            <div style="min-height: 60vh;" class="spacer"></div>
+            Bottom Content
+          </div>
         </chassis-layout>
         <chassis-layout>
           Column 2
