@@ -8,11 +8,25 @@
     <!-- <link rel="import" href="../../chassis-listinput.html"/> -->
     <!-- <script src="../../dist/chassis-listinput.min.js"></script> -->
     <script src="../../tags/chassis-listinput/tag.js"></script>
+    <style>
+      chassis-listinput {
+        font-size: 20px;
+      }
+    </style>
   </head>
   <body>
-    <chassis-listinput file="">
-      <b>Test</b>
-      <b>Test 2</b>
-    </chassis-listinput>
+    <input class="chassis-listinput" placeholder="Provide a list of data..."/>
+    <chassis-listinput placeholder="Provide a list of data..."></chassis-listinput>
+    <script>
+      var a = document.querySelector('.chassis-listinput:first-of-type')
+
+      a.addEventListener('update', function (e) {
+        console.log(e.detail)
+      })
+
+      a.addEventListener('append', function (e) {
+        console.log(e.detail)
+      })
+    </script>
   </body>
 </html>

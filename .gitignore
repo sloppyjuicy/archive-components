@@ -1,9 +1,10 @@
 _*
 .*
 !.gitignore
+!.buildignore
 !.npmignore
 !.travis.yml
 node_modules
 package.json.save
 *.log
-
+dist

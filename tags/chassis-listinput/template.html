@@ -1,11 +1,18 @@
 <template>
   <style>
     :host {
-      max-width: 100%;
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
     }
+
     content {
-      max-width: 100%;
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
     }
   </style>
-  <content></content>
+  <content style="display: none;"></content>
+  <input id="maininput"></input>
+  <input type="file" id="fileinput" style="display: none; height: 0 !important; width: 0 !important;"/>
 </template>

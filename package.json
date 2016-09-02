@@ -1,7 +1,7 @@
 {
   "name": "ngn-chassis-components",
   "version": "0.0.42",
-  "description": "NGN Chassis Web Components",
+  "description": "Chassis Web Components",
   "main": "index.js",
   "scripts": {
     "test": "echo No tests. Build process only.",
