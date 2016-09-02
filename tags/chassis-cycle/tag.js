@@ -104,11 +104,15 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      * The current active section.
      * @return {HTMLElement}
      */
-    selected: {
-      get: function () {
-        return this.querySelector('[selected]:not([selected="false"])')
-      }
-    },
+     selected: {
+       get: function () {
+         var elements = Array.prototype.slice.call(this.children).filter(function (child) {
+           return child.hasAttribute('selected') && child.getAttribute('selected') === 'true'
+         })
+
+         return elements[0] || null
+       }
+     },
 
     /**
      * @property selectedIndex
@@ -117,7 +121,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      */
     selectedIndex: {
       get: function () {
-        var el = this.querySelector('[selected]:not([selected="false"])')
+        var el = this.selected
         return Array.prototype.slice.call(el.parentNode.children).indexOf(el)
       }
     },
