@@ -188,70 +188,64 @@ gulp.task('create', function () {
 })
 
 gulp.task('release', function (next) {
-  const re = new RegExp('latest: \'' + pkg.version + '\'')
-  if (re.exec(data) === null) {
-    if (!mh.hasAll(process.env, 'GITHUB_TOKEN', 'GITHUB_ACCOUNT', 'GITHUB_REPO')) {
-      throw new Error('Release not possible. Missing data: ' + mh.missing.join(', '))
+  if (!mh.hasAll(process.env, 'GITHUB_TOKEN', 'GITHUB_ACCOUNT', 'GITHUB_REPO')) {
+    throw new Error('Release not possible. Missing data: ' + mh.missing.join(', '))
+  }
+
+  // Check if the release already exists.
+  const https = require('https')
+
+  https.get({
+    hostname: 'api.github.com',
+    path: '/repos/' + process.env.GITHUB_ACCOUNT + '/' + process.env.GITHUB_REPO + '/releases',
+    headers: {
+      'user-agent': 'Release Checker'
     }
+  }, function (res) {
+    let data = ""
+    res.on('data', function (chunk) {
+      data += chunk
+    })
 
-    // Check if the release already exists.
-    const https = require('https')
+    res.on('error', function (err) {
+      throw err
+    })
 
-    https.get({
-      hostname: 'api.github.com',
-      path: '/repos/' + process.env.GITHUB_ACCOUNT + '/' + process.env.GITHUB_REPO + '/releases',
-      headers: {
-        'user-agent': 'Release Checker'
+    res.on('end', function () {
+      data = JSON.parse(data).filter(function (release) {
+        return release.tag_name === pkg.version
+      })
+
+      if (data.length > 0) {
+        console.log('Release ' + pkg.version + ' already exists. Aborting without error.')
+        process.exit(0)
       }
-    }, function (res) {
-      let data = ""
-      res.on('data', function (chunk) {
-        data += chunk
-      })
 
-      res.on('error', function (err) {
-        throw err
-      })
+      const assets = walk(DIR.dist).sort()
 
-      res.on('end', function () {
-        data = JSON.parse(data).filter(function (release) {
-          return release.tag_name === pkg.version
-        })
-
-        if (data.length > 0) {
-          console.log('Release ' + pkg.version + ' already exists. Aborting without error.')
-          process.exit(0)
+      GithubPublisher({
+        token: process.env.GITHUB_TOKEN,
+        owner: process.env.GITHUB_ACCOUNT,
+        repo: process.env.GITHUB_REPO,
+        tag: pkg.version,
+        name: pkg.version,
+        notes: 'Releasing v' + pkg.version,
+        draft: false,
+        prerelease: false,
+        reuseRelease: true,
+        reuseDraftOnly: true,
+        assets: assets,
+        // apiUrl: 'https://myGHEserver/api/v3',
+        target_commitish: 'master'
+      }, function (err, release) {
+        if (err) {
+          err.errors.forEach(function (e) {
+            console.error((e.resource + ' ' + e.code).red.bold)
+          })
+          process.exit(1)
         }
-
-        const assets = walk(DIR.dist).sort()
-
-        GithubPublisher({
-          token: process.env.GITHUB_TOKEN,
-          owner: process.env.GITHUB_ACCOUNT,
-          repo: process.env.GITHUB_REPO,
-          tag: pkg.version,
-          name: pkg.version,
-          notes: 'Releasing v' + pkg.version,
-          draft: false,
-          prerelease: false,
-          reuseRelease: true,
-          reuseDraftOnly: true,
-          assets: assets,
-          // apiUrl: 'https://myGHEserver/api/v3',
-          target_commitish: 'master'
-        }, function (err, release) {
-          if (err) {
-            err.errors.forEach(function (e) {
-              console.error((e.resource + ' ' + e.code).red.bold)
-            })
-            process.exit(1)
-          }
-          console.log(release)
-        })
+        console.log(release)
       })
     })
-  } else {
-    console.log('The version has not changed (' + pkg.version + '). A new release is unnecessary. Aborting deployment with success code.')
-    process.exit(0)
-  }
+  })
 })
