@@ -11,7 +11,14 @@ const del = require('del')
 const fs = require('fs')
 const path = require('path')
 const pkg = require('./package.json')
-const headerComment = '/**\n  * v' + pkg.version + ' generated on: ' + (new Date()) + '\n  * Copyright (c) 2014-' + (new Date()).getFullYear() + ', Corey Butler. All Rights Reserved.\n  */\n'
+const MustHave = require('musthave')
+const mh = new MustHave({
+  throwOnError: false
+})
+const GithubPublisher = require('publish-release')
+let headerComment = '/**\n  * v' + pkg.version + ' generated on: '
+  + (new Date()) + '\n  * Copyright (c) 2014-' + (new Date()).getFullYear()
+  + ', Ecor Ventures LLC. All Rights Reserved. See LICENSE (BSD).\n  */\n'
 
 const DIR = {
   source: path.resolve('./tags'),
