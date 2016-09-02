@@ -65,9 +65,13 @@ gulp.task('copy', function () {
   // Process each tag directory
   let ignored = fs.readFileSync(path.resolve('./.buildignore')).toString().trim().split('\n')
   let sources = fs.readdirSync(DIR.source).filter(function (p) {
+    if (ignored.indexOf(p) >= 0) {
+      return false
+    }
+
     p = path.join(DIR.source, p)
+
     return fs.statSync(p).isDirectory()
-      && ignored.indexOf(p) < 0
       && fs.existsSync(path.join(p, 'tag.js'))
   })
 
