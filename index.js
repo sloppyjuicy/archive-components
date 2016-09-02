@@ -11,7 +11,7 @@ module.exports = function (component, callback) {
     component.forEach(function (tag) {
       var s = document.createElement('script')
       s.setAttribute('type', 'text/javascript')
-      s.setAttribute('src', require('path').join(__dirname, 'dist/' + tag + '.min.js'))
+      s.setAttribute('src', require('path').join(__dirname, tag + '.min.js'))
       s.onload = done
       document.head.appendChild(s)
     })
