@@ -12,10 +12,10 @@ Unfamiliar with Chassis/NGN? Head over to the [ngn.js.org](http://ngn.js.org).
 
 ## Using Chassis Web Components
 
-The web components are available via the [JSDelivr CDN](http://www.jsdelivr.com/projects/ngn-components),
+The web components are available via our Author.io CDN (Amazon & CloudFlare),
 npm, or bower. You can also download them from the [releases page](./releases).
 
-Most of the components use the [shadow DOM](http://w3c.github.io/webcomponents/spec/shadow/),
+Most of the components use the [Shadow DOM](http://w3c.github.io/webcomponents/spec/shadow/),
 which is a major part of web components. However; Chrome & Opera are the only browsers
 currently supporting it (as of 3/1/16). This also means tools like [Electron](https://electron.atom.io)
 and [NW.js](http://nwjs.io) natively support shadow DOM and other web component
@@ -31,13 +31,13 @@ across modern browsers (IE 11+) looks like:
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width">
   <script src="https://cdn.jsdelivr.net/webcomponentsjs/latest/webcomponents.min.js"></script>
-  <script src="//cdn.jsdelivr.net/ngn-components/latest/chassis-cycle.min.js"></script>
-  <!-- <link rel="import" href="//cdn.jsdelivr.net/ngn-components/latest/chassis-cycle.min.js"/> -->
+  <script src="//cdn.author.io/chassis/components/latest/chassis-cycle.min.js"></script>
+  <!-- <link rel="import" href="//cdn.author.io/chassis/components/latest/chassis-cycle.min.js"/> -->
 </head>
 
 <body>
   <chassis-cycle restart="true">
-    <section class="active">
+    <section selected="true">
       Screen 1
     </section>
     <section>
@@ -58,9 +58,7 @@ you're interested in.
 
 **Production Use**
 
-If you're using these components in a production website, it is probably best to
-use the concatenation features of JSDelivr. Select the components you wish to use
-and include them in one HTTP request. Alternatively, you may find
+You may find
 [Chassis HTTP Preconnect](https://github.com/ngnjs/chassis-lib/blob/master/src/http.js#L631)
 helpful, or use `preconnect` directly in the `<head>` of your HTML page. For
 more information about preconnect, see
@@ -114,8 +112,8 @@ npm install ngn-chassis-components
 
 # Creating New Components (Hacking)
 
-If you want to create a new chassis- web component, you should first post an issue
-or reach out to the chassis- team to assure we'll accept it. We are absolutely
+If you want to create a new `chassis-whatever` web component, you should first post an issue
+or reach out to the Chassis team to assure we'll accept it. We are absolutely
 interested in community contributions, but we also have a strict philosophy
 of keeping things simple. For example, we won't accept tags like `<my-whole-app>`,
 but we will consider small, reusable tags.
