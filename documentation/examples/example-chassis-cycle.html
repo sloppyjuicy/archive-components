@@ -27,6 +27,11 @@
         background-color: #336699;
         color: #ffffff;
       }
+      section > chassis-cycle {
+        background-color: rgba(33,66,99, .2);
+        border: 0;
+        padding: 2em;
+      }
     </style>
   </head>
   <body>
@@ -51,9 +56,20 @@
       <div>
         Unique Screen 4 (div)
       </div>
+      <section>
+        <b>Nested <pre style="display: inline;">&lt;chassis-cycle&gt;</pre> tag:</b>
+        <button id="subprev">Previous</button>
+        <button id="subnext">Next</button>
+        <chassis-cycle restart="true">
+          <div selected="true">A</div>
+          <div>B</div>
+          <div>C</div>
+        </chassis-cycle>
+      </section>
     </chassis-cycle>
     <script type="text/javascript">
       var cycle = document.querySelector('chassis-cycle')
+      var subcycle = document.querySelector('section > chassis-cycle')
 
       cycle.addEventListener('change', function (e) {
         console.log(e.detail)
@@ -71,6 +87,16 @@
 
       document.querySelector('select').addEventListener('change', function (e) {
         cycle.show(parseInt(e.target.selectedOptions[0].value, 10))
+      })
+
+      document.querySelector('#subnext').addEventListener('click', function (e) {
+        e.preventDefault()
+        subcycle.next()
+      })
+
+      document.querySelector('#subprev').addEventListener('click', function (e) {
+        e.preventDefault()
+        subcycle.previous()
       })
 
       var run = function () {

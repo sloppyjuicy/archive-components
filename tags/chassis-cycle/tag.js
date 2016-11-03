@@ -107,7 +107,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
      selected: {
        get: function () {
          var elements = Array.prototype.slice.call(this.children).filter(function (child) {
-           return child.hasAttribute('selected') && child.getAttribute('selected') === 'true'
+           return child.hasAttribute('selected') && child.getAttribute('selected') !== 'false'
          })
 
          return elements[0] || null
