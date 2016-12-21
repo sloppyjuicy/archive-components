@@ -92,7 +92,7 @@ var ChassisOverlay = document.registerElement('chassis-overlay', { // eslint-dis
         })
         document.body.style.overflow = 'initial'
         this.removeAttribute('active')
-        this.dispatchEvent(new CustomEvent('close')) { // eslint-disable-line no-undef
+        this.dispatchEvent(new CustomEvent('close')) // eslint-disable-line no-undef
       }
     },
 
@@ -113,7 +113,7 @@ var ChassisOverlay = document.registerElement('chassis-overlay', { // eslint-dis
         document.body.style.overflow = 'hidden'
         this.setAttribute('active', 'true')
 
-        this.dispatchEvent(new CustomEvent('open')) { // eslint-disable-line no-undef
+        this.dispatchEvent(new CustomEvent('open')) // eslint-disable-line no-undef
       }
     },
 
