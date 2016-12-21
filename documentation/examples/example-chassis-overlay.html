@@ -76,6 +76,25 @@
         border-radius: 200rem;
         cursor: pointer;
       }
+
+      #container {
+        width: 50vw;
+        height: 100px;
+        border: 1px dashed rgba(0,0,0,.3);
+      }
+
+      #container:after {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        content: 'Click to see overlay';
+        color: rgba(0,0,0,.2);
+      }
+
+      #container > chassis-overlay {
+        background-color: rgba(0,0,0,.5);
+      }
     </style>
   </head>
   <body>
@@ -115,6 +134,11 @@
       the &times; to close it (we customized it).
       <span>&times;</span>
     </chassis-overlay>
+    <div id="container">
+      <chassis-overlay>
+        Contained overlay
+      </chassis-overlay>
+    </div>
     <script>
       // hide body to prevent FOUC
       document.body.style.opacity = 0;
@@ -132,6 +156,7 @@
         var b = document.querySelector('header > button:nth-of-type(2)')
         var c = document.querySelector('header > button:nth-of-type(3)')
         var d = document.querySelector('header > button:nth-of-type(4)')
+        var e = document.getElementById('container')
 
         a.addEventListener('click', function (e) {
           overlays[0].open()
@@ -147,6 +172,10 @@
 
         d.addEventListener('click', function (e) {
           overlays[3].open()
+        })
+
+        e.addEventListener('click', function (e) {
+          overlays[4].open()
         })
 
         var custom = document.querySelector('chassis-overlay:last-of-type > span')

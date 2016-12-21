@@ -16,6 +16,7 @@
       opacity: 0;
       pointer-events: none;
     }
+
     chassis-overlay {
       background: rgba(0,0,0,.6);
       display: flex;
@@ -31,10 +32,12 @@
       opacity: 0;
       pointer-events: none;
     }
+
     :host([active="true"]) {
       opacity: 1;
       pointer-events: auto;
     }
+
     chassis-overlay[active="true"] {
       opacity: 1;
       pointer-events: auto;
