@@ -64,8 +64,11 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
           mutations.forEach(function(mutation) {
             if (mutation.type === 'childList') {
               if (mutation.addedNodes.length > 0) {
-                me.processChildStyles(mutation.addedNodes[0])
+                if (mutation.addedNodes[0].nodeType === Node.ELEMENT_NODE) {
+                  me.processChildStyles(mutation.addedNodes[0])
+                }
               }
+
               if (mutation.removedNodes.length > 0) {
                 if (!me.selected) {
                   me.previous()
@@ -93,10 +96,7 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
     processChildStyles: {
       enumerable: false,
       value: function (element) {
-        var style = ''
-        if (element && element.getAttribute && element.getAttribute('style')) {
-          style = element.getAttribute('style')
-        }
+        var style = element.getAttribute('style') || ''
 
         style = (style + (style.length > 0 ? ';' : '') + "display: none !important;").replace(/;{2,10}/gi, ';')
 
