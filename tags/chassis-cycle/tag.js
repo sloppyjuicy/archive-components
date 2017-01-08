@@ -93,8 +93,13 @@ var NgnCycle = document.registerElement('chassis-cycle', { // eslint-disable-lin
     processChildStyles: {
       enumerable: false,
       value: function (element) {
-        var style = element.getAttribute('style') || ''
-        style = (style + ";display: none !important;").replace(/;;/gi, ';')
+        var style = ''
+        if (element && element.getAttribute && element.getAttribute('style')) {
+          style = element.getAttribute('style')
+        }
+
+        style = (style + (style.length > 0 ? ';' : '') + "display: none !important;").replace(/;{2,10}/gi, ';')
+
         element.setAttribute('style', style)
       }
     },
